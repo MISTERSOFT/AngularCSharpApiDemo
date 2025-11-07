@@ -1,0 +1,6 @@
+@AngularCSharpApiDemo.Server_HostAddress = https://localhost:8081
+
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
