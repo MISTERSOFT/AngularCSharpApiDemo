@@ -7,9 +7,13 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "angularcsharpapidemo.client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularCSharpApiDemo.Server", "AngularCSharpApiDemo.Server\AngularCSharpApiDemo.Server.csproj", "{84386F54-5859-4F13-AA28-F850F76F43D6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{9C8CB701-102D-CF49-A3E0-89AC09D42C2C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{9C8CB701-102D-CF49-A3E0-89AC09D42C2C}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.env.example = .env.example
+		CLAUDE.md = CLAUDE.md
 		docker-compose.yml = docker-compose.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
