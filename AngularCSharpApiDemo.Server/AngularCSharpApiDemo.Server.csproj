@@ -10,6 +10,7 @@
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <!--<SpaProxyServerUrl>https://localhost:55428</SpaProxyServerUrl>-->
 	<SpaProxyServerUrl>https://localhost:32769</SpaProxyServerUrl>
+	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
