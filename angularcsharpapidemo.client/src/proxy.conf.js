@@ -8,7 +8,8 @@ console.log('TARGET NIOGGER:', target)
 const PROXY_CONFIG = [
   {
     context: [
-       "/api"
+       "/api",
+       "/health"
        //"/weatherforecast",
      ],
     target,
