@@ -1,12 +1,16 @@
 using System.Text;
 using AngularCSharpApiDemo.Server.Data;
 using AngularCSharpApiDemo.Server.Extensions;
+using AngularCSharpApiDemo.Server.HealthChecks;
 using AngularCSharpApiDemo.Server.Interfaces;
 using AngularCSharpApiDemo.Server.Models;
 using AngularCSharpApiDemo.Server.Services;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,6 +88,22 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Configure Health Checks
+builder.Services.AddHealthChecks()
+    // Basic health check
+    .AddCheck("self", () => HealthCheckResult.Healthy("API is running"))
+    // PostgreSQL database health check
+    .AddNpgSql(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!,
+        name: "PostgreSQL",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "database", "postgresql", "ready" })
+    // Custom database health check (migrations, etc.)
+    .AddCheck<DatabaseHealthCheck>(
+        name: "Database Migrations",
+        failureStatus: HealthStatus.Degraded,
+        tags: new[] { "database", "migrations" });
+
 var app = builder.Build();
 
 // Apply migrations and seed database
@@ -105,6 +125,27 @@ app.UseCors("AllowAngularApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map Health Check endpoints
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = false
+});
+
+// Liveness probe (for Kubernetes/Docker)
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("self") || check.Name == "self",
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+// Readiness probe (for Kubernetes/Docker)
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.MapControllers();
 
