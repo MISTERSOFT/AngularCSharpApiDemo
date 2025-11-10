@@ -9,6 +9,7 @@ A full-stack web application template combining **Angular 20** frontend with **A
 - ✅ **Docker Compose** for PostgreSQL and PGAdmin
 - ✅ **Role-based Authorization** (Admin, User)
 - ✅ **Automatic Database Seeding** with default admin user
+- ✅ **Health Checks** with Kubernetes-ready probes
 - ✅ **Clean Architecture** with organized folder structure
 - ✅ **OpenAPI/Swagger** documentation
 - ✅ **CORS** configured for Angular development
@@ -29,6 +30,10 @@ AngularCSharpApiDemo.Server/
 │   ├── DatabaseSeeder.cs         # Seeds roles & admin user
 │   ├── README_SEEDING.md         # Seeding documentation
 │   └── SEEDING_APPROACHES.md     # Comparison of seeding methods
+│
+├── HealthChecks/        # Health monitoring
+│   ├── DatabaseHealthCheck.cs    # Custom database health check
+│   └── README_HEALTHCHECKS.md    # Health checks documentation
 │
 ├── Models/              # Domain entities
 │   └── ApplicationUser.cs        # User entity (extends IdentityUser)
@@ -55,6 +60,7 @@ AngularCSharpApiDemo.Server/
 **Purpose of Each Folder:**
 - **Controllers**: Handle HTTP requests and return responses
 - **Data**: Database configuration, context, and seeding logic
+- **HealthChecks**: Application health monitoring and probes
 - **Models**: Database entities (tables structure)
 - **DTOs**: Objects for API input/output (never expose entities directly)
 - **Services**: Business logic separated from controllers
@@ -150,6 +156,10 @@ The application will:
 - **Backend API**: https://localhost:7000 (check console for actual port)
 - **Swagger/OpenAPI**: https://localhost:7000/openapi/v1.json (in development)
 - **PGAdmin**: http://localhost:5050 (Docker container PgAdmin needs to be running)
+- **Health Checks**:
+  - Complete status: https://localhost:7000/health
+  - Liveness probe: https://localhost:7000/health/live
+  - Readiness probe: https://localhost:7000/health/ready
 
 ## 🔐 Authentication
 
@@ -314,6 +324,117 @@ await app.SeedDatabaseAsync();    // Default seeding
 await app.SeedProductsAsync();    // Custom seeding
 ```
 
+## 🏥 Health Checks
+
+The application includes a comprehensive health checks system for monitoring application health and readiness.
+
+### Health Check Endpoints
+
+| Endpoint | Purpose | Use Case |
+|----------|---------|----------|
+| `/health` | Complete health status | General monitoring, detailed diagnostics |
+| `/health/live` | Liveness probe | Kubernetes/Docker container restarts |
+| `/health/ready` | Readiness probe | Kubernetes/Docker traffic routing |
+
+### What Gets Checked?
+
+1. **Self Check** - Verifies the API is running
+2. **PostgreSQL Connection** - Checks database connectivity
+3. **Database Migrations** - Detects pending migrations
+
+### Health Status Responses
+
+**Healthy** (HTTP 200):
+```json
+{
+  "status": "Healthy",
+  "totalDuration": "00:00:00.1234567",
+  "entries": {
+    "self": {
+      "status": "Healthy",
+      "description": "API is running"
+    },
+    "PostgreSQL": {
+      "status": "Healthy"
+    },
+    "Database Migrations": {
+      "status": "Healthy",
+      "description": "Database is healthy",
+      "data": {
+        "provider": "PostgreSQL",
+        "database": "angularcsharpapidemo"
+      }
+    }
+  }
+}
+```
+
+**Degraded** (HTTP 200) - Database has pending migrations:
+```json
+{
+  "status": "Degraded",
+  "entries": {
+    "Database Migrations": {
+      "status": "Degraded",
+      "description": "Database has 2 pending migration(s)"
+    }
+  }
+}
+```
+
+**Unhealthy** (HTTP 503) - Cannot connect to database:
+```json
+{
+  "status": "Unhealthy",
+  "entries": {
+    "PostgreSQL": {
+      "status": "Unhealthy",
+      "description": "Failed to connect to database"
+    }
+  }
+}
+```
+
+### Testing Health Checks
+
+```bash
+# Check overall health
+curl https://localhost:7000/health | jq
+
+# Check liveness (is the app alive?)
+curl https://localhost:7000/health/live | jq
+
+# Check readiness (is the app ready to serve traffic?)
+curl https://localhost:7000/health/ready | jq
+```
+
+### Docker/Kubernetes Integration
+
+**Dockerfile HEALTHCHECK:**
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health/live || exit 1
+```
+
+**Kubernetes Deployment:**
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+```
+
+For detailed health checks documentation, see **[HealthChecks/README_HEALTHCHECKS.md](AngularCSharpApiDemo.Server/HealthChecks/README_HEALTHCHECKS.md)**.
+
 ## 🛠️ Development Workflow
 
 ### Creating a New API Endpoint
@@ -440,6 +561,13 @@ Detailed documentation is available in:
   - API endpoint examples
   - Testing with Swagger
   - Troubleshooting
+
+- **[HealthChecks/README_HEALTHCHECKS.md](AngularCSharpApiDemo.Server/HealthChecks/README_HEALTHCHECKS.md)** - Health checks system
+  - Endpoint descriptions with response examples
+  - Docker/Kubernetes integration
+  - Monitoring and alerting setup
+  - Custom health checks creation
+  - Testing and troubleshooting
 
 - **[Data/SEEDING_APPROACHES.md](AngularCSharpApiDemo.Server/Data/SEEDING_APPROACHES.md)** - Database seeding comparison
   - Extension method vs UseSeeding vs ModelBuilder
@@ -585,9 +713,9 @@ After setup, consider implementing:
 5. **User Profile Management** - Update user information
 6. **Audit Logging** - Track user actions
 7. **API Versioning** - Version your API endpoints
-8. **Health Checks** - Monitor application health
-9. **Rate Limiting** - Prevent abuse
-10. **Background Jobs** - Using Hangfire or similar
+8. **Rate Limiting** - Prevent abuse
+9. **Background Jobs** - Using Hangfire or similar
+10. **Caching** - Redis or in-memory caching
 
 ## 📦 Tech Stack
 
@@ -598,6 +726,7 @@ After setup, consider implementing:
 - ASP.NET Core Identity
 - JWT Bearer Authentication
 - Npgsql (PostgreSQL provider)
+- AspNetCore.HealthChecks (NpgSql, UI.Client)
 
 ### Frontend
 - Angular 20.3.10
