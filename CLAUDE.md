@@ -187,7 +187,19 @@ ng test --code-coverage
 
 This project follows **Conventional Commits 1.0.0** specification.
 
-Everything is describe in this file `@./.claude/guidelines/commit-conventions.md`
+Everything is described in this file `@./.claude/guidelines/commit-conventions.md`
+
+### Automated Commits
+
+**Slash Command**: Use `/atomic-commit` to automatically create atomic commits following these conventions. The command will:
+- Analyze current changes
+- Group them into logical atomic commits
+- Follow the project's conventional commit format
+- Add appropriate emojis and Co-Authored-By footer
+
+### Important Rules
+
+**⚠️ NEVER commit changes automatically.** Always wait for explicit user request to commit changes. The user must explicitly ask to "commit changes" or use the `/atomic-commit` command. Do not proactively commit changes after completing tasks, even if changes are ready to be committed.
 
 ## VS Code Integration
 
