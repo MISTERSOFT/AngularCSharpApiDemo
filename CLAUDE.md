@@ -4,6 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
+This project is a E-commerce application demo using Angular for the frontend and ASP.NET Core for the backend.
+
+The application has the following features:
+- Landing page
+- Product listing
+- Shopping cart
+- User authentication
+- Order processing
+- Admin dashboard
+	- Product management
+	- User management
+
 This is an **integrated full-stack application** combining:
 - **Backend**: ASP.NET Core 9.0 Web API (C#)
 - **Frontend**: Angular 20.3.10 with TypeScript 5.9.3
