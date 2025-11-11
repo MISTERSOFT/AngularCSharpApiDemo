@@ -1,15 +1,230 @@
 @AngularCSharpApiDemo.Server_HostAddress = https://localhost:7041
+@token = YOUR_JWT_TOKEN_HERE
 
+### Weather Forecast (Sample)
 GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/weatherforecast/
 Accept: application/json
 
 ###
 
+#########################
+# AUTHENTICATION
+#########################
+
+### Login (Get JWT Token)
+# @name login
 POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/auth/login
 Content-Type: application/json
+
 {
     "usernameOrEmail": "admin",
     "password": "Azerty123!"
+}
+
+### Register New User
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "username": "testuser",
+    "password": "Password123!",
+    "firstName": "Test",
+    "lastName": "User"
+}
+
+### Get Current User Info
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+#########################
+# CATEGORIES
+#########################
+
+### Get All Categories
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories
+Accept: application/json
+
+### Get Category By ID
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories/1
+Accept: application/json
+
+### Get Products in Category
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories/1/products
+Accept: application/json
+
+### Create Category (Admin Only)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Electronics"
+}
+
+### Create Another Category
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Clothing"
+}
+
+### Update Category (Admin Only)
+PUT {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Electronics & Gadgets"
+}
+
+### Delete Category (Admin Only)
+DELETE {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories/1
+Authorization: Bearer {{token}}
+
+###
+
+#########################
+# PRODUCTS
+#########################
+
+### Get All Products
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Accept: application/json
+
+### Get Product By ID
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/products/1
+Accept: application/json
+
+### Create Product (Admin Only)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "MacBook Pro 16",
+    "description": "Apple MacBook Pro 16-inch with M3 Max chip, 32GB RAM, 1TB SSD",
+    "price": 2499.99,
+    "categoryIds": [1],
+    "imageUrls": [
+        "https://example.com/images/macbook-pro-1.jpg",
+        "https://example.com/images/macbook-pro-2.jpg"
+    ]
+}
+
+### Create Product with Multiple Categories
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Sony WH-1000XM5",
+    "description": "Industry-leading noise canceling wireless headphones",
+    "price": 399.99,
+    "categoryIds": [1],
+    "imageUrls": [
+        "https://example.com/images/sony-headphones-1.jpg"
+    ]
+}
+
+### Create Product without Images
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "USB-C Cable",
+    "description": "High-speed USB-C charging cable, 2 meters",
+    "price": 19.99,
+    "categoryIds": [1],
+    "imageUrls": []
+}
+
+### Update Product (Admin Only)
+PUT {{AngularCSharpApiDemo.Server_HostAddress}}/api/products/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "MacBook Pro 16 (Updated)",
+    "description": "Apple MacBook Pro 16-inch with M3 Max chip, 32GB RAM, 1TB SSD - Now with updated specs!",
+    "price": 2399.99,
+    "categoryIds": [1],
+    "imageUrls": [
+        "https://example.com/images/macbook-pro-updated-1.jpg",
+        "https://example.com/images/macbook-pro-updated-2.jpg",
+        "https://example.com/images/macbook-pro-updated-3.jpg"
+    ]
+}
+
+### Delete Product (Admin Only)
+DELETE {{AngularCSharpApiDemo.Server_HostAddress}}/api/products/1
+Authorization: Bearer {{token}}
+
+###
+
+#########################
+# ERROR SCENARIOS
+#########################
+
+### Get Non-Existent Product (Should return 404)
+GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/products/999999
+Accept: application/json
+
+### Create Product with Invalid Category IDs (Should return 400)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Invalid Product",
+    "description": "This product has invalid category IDs",
+    "price": 99.99,
+    "categoryIds": [999, 1000],
+    "imageUrls": []
+}
+
+### Create Product with Invalid Price (Should return 400)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Invalid Product",
+    "description": "This product has invalid price",
+    "price": -10.00,
+    "categoryIds": [1],
+    "imageUrls": []
+}
+
+### Create Duplicate Category (Should return 400)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Electronics"
+}
+
+### Delete Category with Products (Should return 400)
+# First create a category and product, then try to delete the category
+DELETE {{AngularCSharpApiDemo.Server_HostAddress}}/api/categories/1
+Authorization: Bearer {{token}}
+
+### Create Product Without Authorization (Should return 401)
+POST {{AngularCSharpApiDemo.Server_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+    "name": "Unauthorized Product",
+    "description": "This should fail",
+    "price": 99.99,
+    "categoryIds": [1],
+    "imageUrls": []
 }
 
 ###
