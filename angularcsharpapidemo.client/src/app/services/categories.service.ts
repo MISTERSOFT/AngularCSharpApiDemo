@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AbstractBaseService } from 'app/core/base-service';
+import { AbstractBaseApiService } from '@app/core/http';
 import { Observable } from 'rxjs';
 import { CategoryDto, CreateCategoryDto, ProductDto, UpdateCategoryDto } from '../types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriesService extends AbstractBaseService {
+export class CategoriesService extends AbstractBaseApiService {
   readonly controllerUrl = `${this.baseUrl}/categories`
 
   /**

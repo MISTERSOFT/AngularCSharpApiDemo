@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { AbstractBaseService } from 'app/core/base-service';
-import { Observable } from 'rxjs';
-import { CreateProductDto, ProductDto, UpdateProductDto, PagedResponse, ProductFilterParams } from '../types';
 import { HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AbstractBaseApiService } from '@app/core/http';
+import { Observable } from 'rxjs';
+import { CreateProductDto, PagedResponse, ProductDto, ProductFilterParams, UpdateProductDto } from '../types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductsService extends AbstractBaseService {
+export class ProductsService extends AbstractBaseApiService {
   readonly controllerUrl = `${this.baseUrl}/products`
 
   /**
