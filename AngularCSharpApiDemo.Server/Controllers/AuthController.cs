@@ -97,23 +97,22 @@ public class AuthController : ControllerBase
         }
 
         // Find user by username or email
-        var user = await _userManager.FindByNameAsync(loginDto.UsernameOrEmail)
-            ?? await _userManager.FindByEmailAsync(loginDto.UsernameOrEmail);
+        var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
         if (user == null)
         {
-            return Unauthorized(new { message = "Invalid username/email or password" });
+            return Unauthorized(new { message = "Invalid credentials" });
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Failed login attempt for user {UsernameOrEmail}", loginDto.UsernameOrEmail);
-            return Unauthorized(new { message = "Invalid username/email or password" });
+            _logger.LogWarning("Failed login attempt for user {Email}", loginDto.Email);
+            return Unauthorized(new { message = "Invalid credentials" });
         }
 
-        _logger.LogInformation("User {Username} logged in successfully", user.UserName);
+        _logger.LogInformation("User {Email} logged in successfully", user.Email);
 
         // Generate JWT token
         var roles = await _userManager.GetRolesAsync(user);
