@@ -1,0 +1,32 @@
+<div class="flex items-center justify-center gap-2 mt-6">
+  <!-- Previous Button -->
+  <button
+    (click)="onPageChange(currentPage() - 1)"
+    [disabled]="!hasPrevious()"
+    class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
+    Previous
+  </button>
+
+  <!-- Page Numbers -->
+  @for (page of getPageNumbers(); track page) {
+    <button
+      (click)="onPageChange(page)"
+      [class.bg-indigo-600]="page === currentPage()"
+      [class.hover:bg-indigo-600/90]="page === currentPage()"
+      [class.text-white]="page === currentPage()"
+      [class.bg-white]="page !== currentPage()"
+      [class.text-gray-700]="page !== currentPage()"
+      [class.hover:bg-gray-50]="page !== currentPage()"
+      class="cursor-pointer px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg">
+      {{ page }}
+    </button>
+  }
+
+  <!-- Next Button -->
+  <button
+    (click)="onPageChange(currentPage() + 1)"
+    [disabled]="!hasNext()"
+    class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
+    Next
+  </button>
+</div>

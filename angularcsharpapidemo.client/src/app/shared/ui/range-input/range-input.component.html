@@ -1,0 +1,9 @@
+<div class="flex items-center gap-2" [formGroup]="group()">
+  <input
+    class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 w-full px-2 py-1.5"
+    type="number" placeholder="Min" [min]="0" formControlName="min">
+  -
+  <input
+    class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 w-full px-2 py-1.5"
+    type="number" placeholder="Max" [min]="0" formControlName="max">
+</div>
