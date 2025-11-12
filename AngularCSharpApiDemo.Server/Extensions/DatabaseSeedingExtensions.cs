@@ -25,8 +25,9 @@ public static class DatabaseSeedingExtensions
         {
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var context = services.GetRequiredService<ApplicationDbContext>();
 
-            var seeder = new DatabaseSeeder(roleManager, userManager, logger);
+            var seeder = new DatabaseSeeder(roleManager, userManager, context, logger);
             await seeder.SeedAsync();
 
             logger.LogInformation("Database seeding completed successfully");
