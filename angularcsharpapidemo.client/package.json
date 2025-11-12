@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^20.3.10",
     "@angular/platform-browser-dynamic": "^20.3.10",
     "@angular/router": "^20.3.10",
+    "@ng-icons/core": "^32.4.0",
+    "@ng-icons/lucide": "^32.4.0",
     "@tailwindcss/postcss": "^4.1.17",
     "jest-editor-support": "*",
     "postcss": "^8.5.6",
