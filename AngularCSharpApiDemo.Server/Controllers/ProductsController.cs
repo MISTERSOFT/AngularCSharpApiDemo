@@ -21,14 +21,57 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Get all products
+    /// Get all products with pagination and filtering
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
+    public async Task<ActionResult<PagedResponse<ProductDto>>> GetProducts([FromQuery] ProductFilterParams filterParams)
     {
-        var products = await _context.Products
+        var query = _context.Products
             .Include(p => p.Categories)
             .Include(p => p.ProductImages)
+            .AsQueryable();
+
+        // Apply search filter
+        if (!string.IsNullOrWhiteSpace(filterParams.Search))
+        {
+            var searchLower = filterParams.Search.ToLower();
+            query = query.Where(p =>
+                p.Name.ToLower().Contains(searchLower) ||
+                p.Description.ToLower().Contains(searchLower));
+        }
+
+        // Apply category filter
+        if (!string.IsNullOrWhiteSpace(filterParams.Categories))
+        {
+            var categoryIds = filterParams.Categories
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToList();
+
+            if (categoryIds.Any())
+            {
+                query = query.Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)));
+            }
+        }
+
+        // Apply price range filter
+        if (filterParams.MinPrice.HasValue)
+        {
+            query = query.Where(p => p.Price >= filterParams.MinPrice.Value);
+        }
+
+        if (filterParams.MaxPrice.HasValue)
+        {
+            query = query.Where(p => p.Price <= filterParams.MaxPrice.Value);
+        }
+
+        // Get total count after filtering
+        var totalCount = await query.CountAsync();
+
+        // Apply pagination
+        var products = await query
+            .Skip((filterParams.PageNumber - 1) * filterParams.PageSize)
+            .Take(filterParams.PageSize)
             .ToListAsync();
 
         var productDtos = products.Select(p => new ProductDto
@@ -49,7 +92,20 @@ public class ProductsController : ControllerBase
             }).ToList()
         }).ToList();
 
-        return Ok(productDtos);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)filterParams.PageSize);
+
+        var response = new PagedResponse<ProductDto>
+        {
+            PageNumber = filterParams.PageNumber,
+            PageSize = filterParams.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            HasPrevious = filterParams.PageNumber > 1,
+            HasNext = filterParams.PageNumber < totalPages,
+            Items = productDtos
+        };
+
+        return Ok(response);
     }
 
     /// <summary>
