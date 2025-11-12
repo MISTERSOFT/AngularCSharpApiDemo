@@ -536,7 +536,7 @@ builder.Services.AddCors(options =>
 ### Development (Database Only)
 
 ```bash
-docker-compose up -d      # Start PostgreSQL & PGAdmin
+docker-compose -f docker-compose.development.yml up -d      # Start PostgreSQL & PGAdmin
 docker-compose down       # Stop services
 docker-compose logs -f    # View logs
 ```
