@@ -1,0 +1,8 @@
+<a [routerLink]="`/products/${product().id}`">
+  <img
+    class='rounded-lg w-full group-hover:shadow-xl hover:-translate-y-0.5 duration-300 transition-all h-72 object-cover object-top'
+    [src]="product().productImages[0]?.url || 'https://images.unsplash.com/photo-1598554747436-c9293d6a588f?q=80&w=500&auto=format&fit=crop'"
+    [alt]="product().name">
+  <p class='text-sm mt-2'>{{ product().name }}</p>
+  <p class='text-xl'>{{ product().price | currency:'EUR':'symbol':'1.2-2' }}</p>
+</a>

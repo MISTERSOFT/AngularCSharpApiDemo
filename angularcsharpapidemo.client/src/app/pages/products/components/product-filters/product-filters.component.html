@@ -1,0 +1,32 @@
+<form class="border border-gray-300 rounded-lg p-4 shadow-sm space-y-4 bg-white" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <h2 class="text-2xl font-semibold text-slate-900 mb-4">Filters</h2>
+
+  <!-- Search Filter -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-gray-700">Search</label>
+    <app-search-bar
+      class="block"
+      [control]="formGroup.controls.search"
+      placeholder="Search a product" />
+  </div>
+
+  <!-- Category Filter -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-gray-700">Category</label>
+    <app-select
+      [control]="formGroup.controls.categories"
+      [options]="categoriesAsOptions()" />
+  </div>
+
+  <!-- Price Range Filter -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-gray-700">Price (€)</label>
+    <app-range-input [group]="formGroup.controls.price" />
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-col gap-2">
+    <app-button variant="default" type="submit" className="w-full">Apply</app-button>
+    <app-button variant="outline" type="button" [disabled]="!hasActiveFilters" (click)="resetFilters()" className="w-full">Reset</app-button>
+  </div>
+</form>

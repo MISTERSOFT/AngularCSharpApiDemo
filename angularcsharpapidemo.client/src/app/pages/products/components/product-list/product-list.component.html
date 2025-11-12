@@ -1,0 +1,13 @@
+@if (isLoading()) {
+<div class="text-2xl text-center text-black py-12">
+  Loading products...
+</div>
+} @else if (products().length > 0) {
+<div class="grid grid-cols-4 gap-4">
+  @for (product of products(); track product.id) {
+  <app-products-components-product-item [product]="product"></app-products-components-product-item>
+  }
+</div>
+} @else {
+<div class="text-4xl text-center text-black leading-relaxed pb-1">No product found.</div>
+}

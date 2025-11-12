@@ -1,0 +1,37 @@
+<div class="flex gap-6 p-6">
+  <!-- Product Filters Sidebar -->
+  <aside class="w-[300px]">
+    @if (categories$ | async; as categories) {
+      <app-products-components-product-filters
+        [categories]="categories"
+        (onFiltersApplied)="onFiltersChanged($event)">
+      </app-products-components-product-filters>
+    }
+  </aside>
+
+  <!-- Product List -->
+  <div class="flex-1">
+    <!-- Product count and info -->
+    @if (!isLoading() && products().length > 0) {
+      <div class="mb-4 text-sm text-gray-600">
+         {{paginationText()}}
+      </div>
+    }
+
+    <app-products-components-product-list
+      [products]="products()"
+      [isLoading]="isLoading()">
+    </app-products-components-product-list>
+
+    <!-- Pagination -->
+    @if (!isLoading() && totalPages() > 1) {
+      <app-pagination
+        [currentPage]="currentPage()"
+        [totalPages]="totalPages()"
+        [hasPrevious]="hasPrevious()"
+        [hasNext]="hasNext()"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
+    }
+  </div>
+</div>
