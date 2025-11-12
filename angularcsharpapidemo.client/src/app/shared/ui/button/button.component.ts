@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { twMerge } from 'tailwind-merge';
 
 const DEFAULT_STYLE = "cursor-pointer transition rounded-md"
 
@@ -28,11 +29,12 @@ export class ButtonComponent {
   size = input<keyof typeof BUTTONS_SIZE>('md')
   type = input<'button' | 'reset' | 'submit'>('button')
   disabled = input(false)
-  styles = computed(() => [
+  styles = computed(() => twMerge(
     DEFAULT_STYLE,
     this.className(),
     BUTTONS_VARIANTS[this.variant()],
     BUTTONS_SIZE[this.size()],
     this.disabled() && "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white",
-  ].join(' '))
+  ))
+  onClick = output<PointerEvent>()
 }
