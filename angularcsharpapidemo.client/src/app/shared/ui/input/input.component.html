@@ -1,0 +1,9 @@
+<input
+  [type]="type()"
+  [placeholder]="placeholder()"
+  [value]="value"
+  [disabled]="disabled"
+  [class]="styles()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+/>
