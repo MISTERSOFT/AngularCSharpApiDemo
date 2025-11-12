@@ -22,6 +22,7 @@
       "@app/types": ["app/types.ts"],
       "@app/shared/*": ["app/shared/*"],
       "@app/services": ["app/services/index"],
+      "@app/core/*": ["app/core/*"],
     }
   },
   "angularCompilerOptions": {
