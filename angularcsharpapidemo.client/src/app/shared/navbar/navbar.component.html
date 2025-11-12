@@ -1,5 +1,5 @@
 <nav
-  class="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
+  class="flex items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
   <a routerLink="/" class="inline-flex text-indigo-600 font-bold text-xl">
     Demo Angular
   </a>
@@ -8,34 +8,43 @@
     <ng-icon name="lucideMenu"></ng-icon>
   </button>
 
-  <div id="mobile-menu"
+  <!-- <div id="mobile-menu"
     class="hidden absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden">
-    <a href="#" class="block">Home</a>
-    <a href="#" class="block">About</a>
-    <a href="#" class="block">Contact</a>
+    <a routerLink="/" class="block">Home</a>
+    <a routerLink="/products" class="block">Products</a>
     <button
       class="cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm">
-      Login
+      Signin
     </button>
-  </div>
+  </div> -->
 
-  <div class="hidden sm:flex items-center gap-8">
-    <a routerLink="/">Home</a>
-    <a routerLink="/products">Products</a>
-
-    <div class="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-      <input class="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text"
-        placeholder="Search products" />
-
+  <div class="flex justify-between w-full">
+    <div class="flex items-center gap-8">
+      <a routerLink="/">Home</a>
+      <a routerLink="/products">Products</a>
     </div>
 
-    <div class="relative cursor-pointer">
-      <ng-icon name="lucideShoppingCart"></ng-icon>
-      <button
-        class="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">3</button>
-    </div>
+    <div class="flex items-center gap-8">
 
-    <app-button>Sign up</app-button>
-    <app-button variant="outline">Sign in</app-button>
+
+      @if (user()) {
+      <div class="relative cursor-pointer">
+        <ng-icon name="lucideShoppingCart"></ng-icon>
+        <span
+          class="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full text-center">3</span>
+      </div>
+      <span>Hello {{user()?.email}}</span>
+      <app-button variant="outline" (onClick)="logout()">
+        Disconnect
+      </app-button>
+      } @else {
+      <app-button variant="outline">
+        <a routerLink="/signin">Sign in</a>
+      </app-button>
+      <app-button>
+        <a routerLink="/signup">Sign up</a>
+      </app-button>
+      }
+    </div>
   </div>
 </nav>

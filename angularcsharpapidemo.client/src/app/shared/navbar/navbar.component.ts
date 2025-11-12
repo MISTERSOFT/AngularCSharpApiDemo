@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { UserDto } from '@app/services';
 import { ButtonComponent } from '@app/shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideMenu, lucideShoppingCart } from '@ng-icons/lucide';
@@ -10,10 +11,16 @@ import { lucideMenu, lucideShoppingCart } from '@ng-icons/lucide';
   imports: [
     RouterLink,
     NgIcon,
-    ButtonComponent
+    ButtonComponent,
   ],
   templateUrl: './navbar.component.html',
   styles: ``,
   viewProviders: [provideIcons({ lucideShoppingCart, lucideMenu })]
 })
-export class NavbarComponent { }
+export class NavbarComponent {
+  user = input<UserDto | null>(null)
+
+  logout() {
+    console.log('LOGOUT')
+  }
+}
