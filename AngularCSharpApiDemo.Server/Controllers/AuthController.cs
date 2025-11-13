@@ -1,4 +1,5 @@
 using AngularCSharpApiDemo.Server.DTOs;
+using AngularCSharpApiDemo.Server.DTOs.Converters;
 using AngularCSharpApiDemo.Server.Interfaces;
 using AngularCSharpApiDemo.Server.Models;
 using Microsoft.AspNetCore.Identity;
@@ -45,7 +46,9 @@ public class AuthController : ControllerBase
 
         var user = new ApplicationUser
         {
-            UserName = registerDto.Username,
+            // Username is not used in this app but we have to define one with AspNetCore.
+            // So we create a random GUID for the Username.
+            UserName = Guid.CreateVersion7().ToString(),
             Email = registerDto.Email,
             FirstName = registerDto.FirstName,
             LastName = registerDto.LastName,
@@ -66,7 +69,7 @@ public class AuthController : ControllerBase
         // Assign default role (optional)
         await _userManager.AddToRoleAsync(user, "User");
 
-        _logger.LogInformation("User {Username} registered successfully", user.UserName);
+        _logger.LogInformation("User {Email} registered successfully", user.Email);
 
         // Generate JWT token
         var roles = await _userManager.GetRolesAsync(user);
@@ -75,11 +78,8 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponseDto
         {
             Token = token,
-            Username = user.UserName ?? string.Empty,
-            Email = user.Email ?? string.Empty,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            ExpiresAt = expiresAt
+            ExpiresAt = expiresAt,
+            User = user.ToUserDto()
         });
     }
 
@@ -121,11 +121,8 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponseDto
         {
             Token = token,
-            Username = user.UserName ?? string.Empty,
-            Email = user.Email ?? string.Empty,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            ExpiresAt = expiresAt
+            ExpiresAt = expiresAt,
+            User = user.ToUserDto()
         });
     }
 
@@ -151,14 +148,6 @@ public class AuthController : ControllerBase
             return NotFound();
         }
 
-        return Ok(new UserDto
-        {
-            Id = user.Id,
-            Username = user.UserName ?? string.Empty,
-            Email = user.Email ?? string.Empty,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            CreatedAt = user.CreatedAt
-        });
+        return Ok(user.ToUserDto());
     }
 }
