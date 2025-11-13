@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { denyIfAuthGuard } from './core/guards/deny-if-auth.guard';
 import { LandingComponent } from './pages/landing/landing.component';
 
 const routes: Routes = [
@@ -10,11 +11,13 @@ const routes: Routes = [
   },
   {
     path: 'signin',
-    loadChildren: () => import('./pages/signin/signin.module').then(m => m.SigninModule)
+    loadChildren: () => import('./pages/signin/signin.module').then(m => m.SigninModule),
+    canActivate: [denyIfAuthGuard]
   },
   {
     path: 'signup',
-    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupModule)
+    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupModule),
+    canActivate: [denyIfAuthGuard]
   },
   { path: '**', redirectTo: '' }
 ];
