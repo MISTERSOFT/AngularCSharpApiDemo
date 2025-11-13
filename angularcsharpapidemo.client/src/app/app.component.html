@@ -1,5 +1,14 @@
 @if (hideNavbar$ | async) {
   <app-navbar [user]="user()"></app-navbar>
 }
+
+@if (isAdminRoute$ | async) {
+  <app-admin-side-menu></app-admin-side-menu>
+}
+  <!-- <main class="ml-64 min-h-screen">
+    <router-outlet></router-outlet>
+  </main>
+} @else { -->
 <router-outlet></router-outlet>
+
 
