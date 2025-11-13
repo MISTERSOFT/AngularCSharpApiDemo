@@ -4,7 +4,7 @@ namespace AngularCSharpApiDemo.Server.DTOs.Converters
 {
     public static class UserConverterExtentions
     {
-        public static UserDto ToUserDto(this ApplicationUser user)
+        public static UserDto ToUserDto(this ApplicationUser user, IList<string>? roles = null)
         {
             return new UserDto
             {
@@ -13,7 +13,8 @@ namespace AngularCSharpApiDemo.Server.DTOs.Converters
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 CreatedAt = user.CreatedAt,
-                Username = user.UserName ?? string.Empty
+                Username = user.UserName ?? string.Empty,
+                Roles = roles?.ToList() ?? new List<string>()
             };
         }
     }

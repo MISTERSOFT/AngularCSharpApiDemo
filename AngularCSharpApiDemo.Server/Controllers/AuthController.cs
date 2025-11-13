@@ -79,7 +79,7 @@ public class AuthController : ControllerBase
         {
             Token = token,
             ExpiresAt = expiresAt,
-            User = user.ToUserDto()
+            User = user.ToUserDto(roles)
         });
     }
 
@@ -122,7 +122,7 @@ public class AuthController : ControllerBase
         {
             Token = token,
             ExpiresAt = expiresAt,
-            User = user.ToUserDto()
+            User = user.ToUserDto(roles)
         });
     }
 
@@ -148,6 +148,9 @@ public class AuthController : ControllerBase
             return NotFound();
         }
 
-        return Ok(user.ToUserDto());
+        // Get user roles
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(user.ToUserDto(roles));
     }
 }
