@@ -8,15 +8,26 @@ export interface LoginDto {
   password: string;
 }
 
+export interface RegisterDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
   token: string;
+  expireAt: string;
   user: UserDto;
 }
 
 export interface UserDto {
   id: number;
   email: string;
-  name: string;
+  lastName: string;
+  firstName: string;
+  createdAt: string;
+  userName: string;
 }
 
 
@@ -54,6 +65,17 @@ export class AuthService extends AbstractBaseApiService {
    */
   login(credentials: LoginDto): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.controllerUrl}/login`, credentials).pipe(
+      tap(response => {
+        this.setAuthData(response.token, response.user);
+      })
+    );
+  }
+
+  /**
+   * Register new user with email and password
+   */
+  register(credentials: RegisterDto): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.controllerUrl}/register`, credentials).pipe(
       tap(response => {
         this.setAuthData(response.token, response.user);
       })
