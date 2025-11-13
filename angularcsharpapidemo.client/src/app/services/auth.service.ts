@@ -22,12 +22,13 @@ export interface AuthResponse {
 }
 
 export interface UserDto {
-  id: number;
+  id: string;
   email: string;
   lastName: string;
   firstName: string;
   createdAt: string;
   userName: string;
+  roles: string[];
 }
 
 
@@ -54,6 +55,14 @@ export class AuthService extends AbstractBaseApiService {
    * Check if user is authenticated
    */
   readonly isAuthenticated = computed(() => !!this.tokenSignal());
+
+  /**
+   * Check if user has admin role
+   */
+  readonly isAdmin = computed(() => {
+    const user = this.userSignal();
+    return user?.roles?.includes('Admin') ?? false;
+  });
 
   constructor() {
     super();
