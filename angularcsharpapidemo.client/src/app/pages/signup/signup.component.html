@@ -1,0 +1,164 @@
+<main class="flex h-screen w-full">
+  <div class="w-full hidden md:inline-block">
+    <img class="h-full object-cover" src="shop.jpg" alt="leftSideImage">
+  </div>
+
+  <div class="w-full flex flex-col items-center justify-center">
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="md:w-96 w-80 flex flex-col items-center justify-center">
+      <h2 class="text-4xl text-gray-900 font-medium">Sign up</h2>
+      <p class="text-sm text-gray-500/90 mt-3">Create your account to get started</p>
+
+      <button type="button"
+        class="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full gap-2 text-gray-500/60 font-semibold">
+        <ng-icon name="svglGoogle" />
+        Google
+      </button>
+
+      <div class="flex items-center gap-4 w-full my-5">
+        <div class="w-full h-px bg-gray-300/90"></div>
+        <p class="w-full text-nowrap text-sm text-gray-500/90">or sign up with email</p>
+        <div class="w-full h-px bg-gray-300/90"></div>
+      </div>
+
+      <!-- Success message display -->
+      @if (successMessage()) {
+        <div class="w-full bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 text-sm">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <!-- Error message display -->
+      @if (errorMessage()) {
+        <div class="w-full bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Email input -->
+      <div class="relative block w-full h-12">
+        <ng-icon name="lucideMail" class="absolute top-1/2 transform -translate-y-1/2 left-5" />
+        <input
+          appInput
+          type="email"
+          placeholder="Email"
+          class="px-10"
+          formControlName="email"
+          [class.border-red-500]="email?.invalid && email?.touched"
+        />
+      </div>
+      @if (email?.invalid && email?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          @if (email?.errors?.['required']) {
+            <p>Email is required</p>
+          }
+          @if (email?.errors?.['email']) {
+            <p>Please enter a valid email address</p>
+          }
+        </div>
+      }
+
+      <!-- First Name input -->
+      <div class="relative block w-full h-12 mt-6">
+        <ng-icon name="lucideUser" class="absolute top-1/2 transform -translate-y-1/2 left-5" />
+        <input
+          appInput
+          type="text"
+          placeholder="First Name"
+          class="px-10"
+          formControlName="firstName"
+          [class.border-red-500]="firstName?.invalid && firstName?.touched"
+        />
+      </div>
+      @if (firstName?.invalid && firstName?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          @if (firstName?.errors?.['required']) {
+            <p>First name is required</p>
+          }
+        </div>
+      }
+
+      <!-- Last Name input -->
+      <div class="relative block w-full h-12 mt-6">
+        <ng-icon name="lucideUser" class="absolute top-1/2 transform -translate-y-1/2 left-5" />
+        <input
+          appInput
+          type="text"
+          placeholder="Last Name"
+          class="px-10"
+          formControlName="lastName"
+          [class.border-red-500]="lastName?.invalid && lastName?.touched"
+        />
+      </div>
+      @if (lastName?.invalid && lastName?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          @if (lastName?.errors?.['required']) {
+            <p>Last name is required</p>
+          }
+        </div>
+      }
+
+      <!-- Password input -->
+      <div class="relative block w-full h-12 mt-6">
+        <ng-icon name="lucideLock" class="absolute top-1/2 transform -translate-y-1/2 left-5" />
+        <input
+          appInput
+          type="password"
+          placeholder="Password"
+          class="px-10"
+          formControlName="password"
+          [class.border-red-500]="password?.invalid && password?.touched"
+        />
+      </div>
+      @if (password?.invalid && password?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          @if (password?.errors?.['required']) {
+            <p>Password is required</p>
+          }
+          @if (password?.errors?.['minlength']) {
+            <p>Password must be at least 6 characters</p>
+          }
+        </div>
+      }
+
+      <!-- Confirm Password input -->
+      <div class="relative block w-full h-12 mt-6">
+        <ng-icon name="lucideLock" class="absolute top-1/2 transform -translate-y-1/2 left-5" />
+        <input
+          appInput
+          type="password"
+          placeholder="Confirm Password"
+          class="px-10"
+          formControlName="confirmPassword"
+          [class.border-red-500]="confirmPassword?.invalid && confirmPassword?.touched"
+        />
+      </div>
+      @if (confirmPassword?.invalid && confirmPassword?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          @if (confirmPassword?.errors?.['required']) {
+            <p>Please confirm your password</p>
+          }
+        </div>
+      }
+
+      <!-- Password mismatch error -->
+      @if (signupForm.errors?.['passwordMismatch'] && confirmPassword?.touched) {
+        <div class="w-full text-red-500 text-xs mt-1 px-1">
+          <p>Passwords do not match</p>
+        </div>
+      }
+
+      <app-button
+        class="w-full mt-8"
+        type="submit"
+        size="lg"
+        className="w-full rounded-full"
+        [disabled]="isLoading()"
+      >
+        {{ isLoading() ? 'Creating account...' : 'Sign up' }}
+      </app-button>
+      <p class="text-gray-500/90 text-sm mt-4">Already have an account? <a class="text-indigo-400 hover:underline"
+          routerLink="/signin">Sign in</a></p>
+    </form>
+  </div>
+</main>
