@@ -6,11 +6,11 @@ const routes: Routes = [
   { path: '', component: AdminComponent },
   {
     path: 'products',
-    loadChildren: () => import('./products/products.module').then(m => m.ProductsModule)
+    loadChildren: () => import('./products/admin-products.module').then(m => m.AdminProductsModule)
   },
   {
     path: 'categories',
-    loadChildren: () => import('./categories/categories.module').then(m => m.CategoriesModule)
+    loadChildren: () => import('./categories/admin-categories.module').then(m => m.AdminCategoriesModule)
   }
 ];
 

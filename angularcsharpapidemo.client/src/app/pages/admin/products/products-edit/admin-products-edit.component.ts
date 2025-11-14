@@ -3,9 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-admin-products-edit',
   standalone: false,
-  templateUrl: './edit.component.html',
-  styles: ``,
+  templateUrl: './admin-products-edit.component.html',
 })
-export class EditComponent {
+export class AdminProductsEditComponent {
 
 }
