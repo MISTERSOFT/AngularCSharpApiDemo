@@ -1,3 +1,6 @@
+<!-- This block handle the theme setter observable. This will be cleaned up automatically. -->
+@if (autoSetTheme$ | async) {}
+
 @if (hideNavbar$ | async) {
   <app-navbar [user]="user()"></app-navbar>
 }

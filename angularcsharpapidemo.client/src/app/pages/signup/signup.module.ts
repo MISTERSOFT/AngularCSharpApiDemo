@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ButtonComponent } from '@app/shared/ui/button';
+import { ButtonDirective } from '@app/shared/ui/button';
 import { InputComponent } from '@app/shared/ui/input';
 import { NgIcon } from '@ng-icons/core';
 import { SignupRoutingModule } from './signup-routing.module';
@@ -18,7 +18,7 @@ import { SignupComponent } from './signup.component';
     ReactiveFormsModule,
     SignupRoutingModule,
     NgIcon,
-    ButtonComponent,
+    ButtonDirective,
     InputComponent
   ]
 })

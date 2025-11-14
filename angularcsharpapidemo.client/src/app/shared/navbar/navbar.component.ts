@@ -1,7 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, UserDto } from '@app/services';
-import { ButtonComponent } from '@app/shared/ui/button';
+import { ButtonDirective } from '@app/shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideMenu, lucideShoppingCart } from '@ng-icons/lucide';
 
@@ -11,7 +11,7 @@ import { lucideMenu, lucideShoppingCart } from '@ng-icons/lucide';
   imports: [
     RouterLink,
     NgIcon,
-    ButtonComponent,
+    ButtonDirective
   ],
   templateUrl: './navbar.component.html',
   viewProviders: [provideIcons({ lucideShoppingCart, lucideMenu })]

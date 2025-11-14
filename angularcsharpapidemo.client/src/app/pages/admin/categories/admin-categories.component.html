@@ -6,9 +6,10 @@
       <p class="text-gray-600 mt-1">Manage product categories</p>
     </div>
     <button
+      appButton
+      class="flex items-center gap-2"
       (click)="createCategory()"
-      class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm flex items-center gap-2 cursor-pointer"
-    >
+      >
       <ng-icon name="lucidePlus" />
       New Category
     </button>
@@ -34,15 +35,6 @@
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Name
             </th>
-            <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Description
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Products
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Created At
-            </th> -->
             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
             </th>
@@ -57,17 +49,6 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm font-medium text-gray-900">{{ category.name }}</div>
               </td>
-              <!-- <td class="px-6 py-4">
-                <div class="text-sm text-gray-600">{{ category.description }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                  {{ category.productsCount }} items
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{ category.createdAt | date:'MMM d, y' }}
-              </td> -->
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <button
                   (click)="editCategory(category.id)"

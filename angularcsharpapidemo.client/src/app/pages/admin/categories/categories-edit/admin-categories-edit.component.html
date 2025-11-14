@@ -69,18 +69,19 @@
         <!-- Form Actions -->
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end gap-3">
           <button
+            appButton
+            variant="secondary"
             type="button"
             (click)="cancel()"
             [disabled]="isSaving()"
-            class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
+            >
             Cancel
           </button>
           <button
+            appButton
             type="submit"
             [disabled]="categoryForm.invalid || isSaving()"
-            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
-          >
+            >
             @if (isSaving()) {
               <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             }

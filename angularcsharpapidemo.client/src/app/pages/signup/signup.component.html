@@ -148,15 +148,15 @@
         </div>
       }
 
-      <app-button
-        class="w-full mt-8"
+      <button
+        appButton
+        class="w-full mt-8 rounded-full"
         type="submit"
         size="lg"
-        className="w-full rounded-full"
         [disabled]="isLoading()"
       >
         {{ isLoading() ? 'Creating account...' : 'Sign up' }}
-      </app-button>
+      </button>
       <p class="text-gray-500/90 text-sm mt-4">Already have an account? <a class="text-indigo-400 hover:underline"
           routerLink="/signin">Sign in</a></p>
     </form>

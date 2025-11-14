@@ -34,16 +34,16 @@
           class="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full text-center">3</span>
       </div>
       <span>Hello {{user()?.email}}</span>
-      <app-button variant="outline" (onClick)="logout()">
+      <button appButton variant="outline" (click)="logout()">
         Disconnect
-      </app-button>
+      </button>
       } @else {
-      <app-button variant="outline">
+      <button appButton variant="outline">
         <a routerLink="/signin">Sign in</a>
-      </app-button>
-      <app-button>
+      </button>
+      <button appButton>
         <a routerLink="/signup">Sign up</a>
-      </app-button>
+      </button>
       }
     </div>
   </div>

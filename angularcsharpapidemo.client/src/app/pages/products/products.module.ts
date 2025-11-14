@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SearchBarComponent } from "@app/shared/search-bar";
-import { ButtonComponent } from "@app/shared/ui/button";
+import { ButtonDirective } from "@app/shared/ui/button";
 import { PaginationComponent } from '@app/shared/ui/pagination';
 import { RangeInputComponent } from "@app/shared/ui/range-input";
 import { SelectComponent } from "@app/shared/ui/select";
@@ -29,7 +29,7 @@ import { ProductsComponent } from './products.component';
     SearchBarComponent,
     SelectComponent,
     RangeInputComponent,
-    ButtonComponent,
+    ButtonDirective,
     PaginationComponent,
 ]
 })

@@ -26,7 +26,7 @@
 
   <!-- Action Buttons -->
   <div class="flex flex-col gap-2">
-    <app-button variant="default" type="submit" className="w-full">Apply</app-button>
-    <app-button variant="outline" type="button" [disabled]="!hasActiveFilters" (click)="resetFilters()" className="w-full">Reset</app-button>
+    <button appButton variant="default" type="submit" class="w-full">Apply</button>
+    <button appButton variant="outline" type="button" [disabled]="!hasActiveFilters" (click)="resetFilters()" class="w-full">Reset</button>
   </div>
 </form>
