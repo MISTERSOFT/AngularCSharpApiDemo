@@ -1,3 +1,59 @@
-<main class="min-h-screen ml-64 p-6">
-  <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+<main class="min-h-screen ml-64 p-6 bg-gray-50">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+    <p class="text-gray-600 mt-1">Overview of your system statistics</p>
+  </div>
+
+  <!-- Error Message -->
+  @if (errorMessage()) {
+    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="flex items-center justify-center py-12">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <p class="ml-3 text-gray-600">Loading dashboard statistics...</p>
+    </div>
+  }
+
+  <!-- Stats Cards -->
+  @if (!isLoading() && stats()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Products Card -->
+      <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Products</p>
+            <p class="text-4xl font-bold text-gray-900 mt-2">{{ stats()!.totalProducts }}</p>
+          </div>
+          <div class="bg-blue-100 rounded-full p-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 mt-4">Total number of products in the system</p>
+      </div>
+
+      <!-- Categories Card -->
+      <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Categories</p>
+            <p class="text-4xl font-bold text-gray-900 mt-2">{{ stats()!.totalCategories }}</p>
+          </div>
+          <div class="bg-green-100 rounded-full p-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 mt-4">Total number of categories in the system</p>
+      </div>
+    </div>
+  }
 </main>
