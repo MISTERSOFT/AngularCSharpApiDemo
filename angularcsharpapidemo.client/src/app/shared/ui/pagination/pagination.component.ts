@@ -42,4 +42,34 @@ export class PaginationComponent {
 
     return pages;
   }
+
+  /**
+   * Check if there are more pages before the displayed range
+   */
+  hasMorePagesBefore(): boolean {
+    const pages = this.getPageNumbers();
+    return pages.length > 0 && pages[0] > 1;
+  }
+
+  /**
+   * Check if there are more pages after the displayed range
+   */
+  hasMorePagesAfter(): boolean {
+    const pages = this.getPageNumbers();
+    return pages.length > 0 && pages[pages.length - 1] < this.totalPages();
+  }
+
+  /**
+   * Go to first page
+   */
+  goToFirstPage(): void {
+    this.onPageChange(1);
+  }
+
+  /**
+   * Go to last page
+   */
+  goToLastPage(): void {
+    this.onPageChange(this.totalPages());
+  }
 }

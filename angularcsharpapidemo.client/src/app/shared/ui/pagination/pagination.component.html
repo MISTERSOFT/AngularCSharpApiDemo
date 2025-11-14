@@ -1,4 +1,13 @@
 <div class="flex items-center justify-center gap-2 mt-6">
+  <!-- First Page Button -->
+  <button
+    (click)="goToFirstPage()"
+    [disabled]="!hasPrevious()"
+    class="cursor-pointer px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+    title="First page">
+    First page
+  </button>
+
   <!-- Previous Button -->
   <button
     (click)="onPageChange(currentPage() - 1)"
@@ -6,6 +15,11 @@
     class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
     Previous
   </button>
+
+  <!-- More pages indicator (before) -->
+  @if (hasMorePagesBefore()) {
+    <span class="px-2 py-2 text-sm text-gray-500">...</span>
+  }
 
   <!-- Page Numbers -->
   @for (page of getPageNumbers(); track page) {
@@ -22,11 +36,25 @@
     </button>
   }
 
+  <!-- More pages indicator (after) -->
+  @if (hasMorePagesAfter()) {
+    <span class="px-2 py-2 text-sm text-gray-500">...</span>
+  }
+
   <!-- Next Button -->
   <button
     (click)="onPageChange(currentPage() + 1)"
     [disabled]="!hasNext()"
     class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white">
     Next
+  </button>
+
+  <!-- Last Page Button -->
+  <button
+    (click)="goToLastPage()"
+    [disabled]="!hasNext()"
+    class="cursor-pointer px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+    title="Last page">
+    Last page
   </button>
 </div>
