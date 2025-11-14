@@ -32,7 +32,7 @@ public class CategoriesController : ControllerBase
         {
             Id = c.Id,
             Name = c.Name
-        }).ToList();
+        }).OrderBy(c => c.Id).ToList();
 
         return Ok(categoryDtos);
     }
