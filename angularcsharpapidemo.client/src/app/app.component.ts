@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService, ThemeService } from '@app/services';
+import { AuthService, ThemeService, type Theme } from '@app/services';
 import { filter, map, tap } from 'rxjs';
 
 @Component({
@@ -47,7 +47,7 @@ export class AppComponent {
     takeUntilDestroyed(),
     filter(event => event instanceof NavigationEnd),
     tap((event) => {
-      const currentTheme = event.url.startsWith('/admin') ? 'admin' : 'default'
+      const currentTheme: Theme = event.url.startsWith('/admin') ? 'admin' : 'default'
       this._themeService.currentTheme.set(currentTheme)
     })
   )
