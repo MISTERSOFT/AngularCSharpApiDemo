@@ -69,3 +69,8 @@ export interface PagedResponse<T> {
   hasNext: boolean
   items: T[]
 }
+
+export interface DashboardStatsDto {
+  totalProducts: number
+  totalCategories: number
+}
