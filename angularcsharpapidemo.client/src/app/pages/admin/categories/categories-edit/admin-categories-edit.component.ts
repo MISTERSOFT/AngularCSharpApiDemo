@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { extractResponseErrors } from '@app/core/utils';
 import { CategoriesService } from '@app/services';
 import { CreateCategoryDto, UpdateCategoryDto } from '@app/types';
 import { provideIcons } from '@ng-icons/core';
@@ -148,7 +149,7 @@ export class AdminCategoriesEditComponent implements OnInit, OnDestroy {
 
     this._categoriesService.createCategory(createDto).pipe(
       catchError((error) => {
-        const messages: string[] = error?.error ? Object.values(error?.error) : ['Failed to create category. Please try again.']
+        const messages: string[] = extractResponseErrors(error, 'Failed to create category. Please try again.')
         messages.forEach(msg => this.errorMessage.set(msg))
         console.error('Create category error:', error);
         return of(null);
@@ -176,7 +177,7 @@ export class AdminCategoriesEditComponent implements OnInit, OnDestroy {
 
     this._categoriesService.updateCategory(this.categoryId, updateDto).pipe(
       catchError((error) => {
-        const messages: string[] = error?.error ? Object.values(error?.error) : ['Failed to update category. Please try again.']
+        const messages: string[] = extractResponseErrors(error, 'Failed to update category. Please try again.')
         messages.forEach(msg => this.errorMessage.set(msg))
         console.error('Update category error:', error);
         return EMPTY
