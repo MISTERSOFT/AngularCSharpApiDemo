@@ -3,9 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-admin-categories-edit',
   standalone: false,
-  templateUrl: './edit.component.html',
-  styles: ``,
+  templateUrl: './admin-categories-edit.component.html',
 })
-export class EditComponent {
+export class AdminCategoriesEditComponent {
 
 }
