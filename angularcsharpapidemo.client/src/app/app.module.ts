@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Error404Component } from './pages/errors/error404/error404.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { FooterComponent } from './shared/footer';
 
 @NgModule({
   declarations: [
@@ -19,11 +20,11 @@ import { LandingComponent } from './pages/landing/landing.component';
   ],
   imports: [
     BrowserModule,
-    // HttpClientModule,
     AppRoutingModule,
     NavbarComponent,
     AdminSideMenuComponent,
-    ButtonDirective
+    ButtonDirective,
+    FooterComponent,
 ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
