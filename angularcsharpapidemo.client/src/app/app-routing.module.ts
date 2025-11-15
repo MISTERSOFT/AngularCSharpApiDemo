@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { adminOnlyGuard, denyIfAuthGuard } from '@app/core/guards';
+import { Error404Component } from './pages/errors/error404/error404.component';
 import { LandingComponent } from './pages/landing/landing.component';
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
     canActivate: [adminOnlyGuard]
   },
+  { path: '404', component: Error404Component },
   { path: '**', redirectTo: '' }
 ];
 
