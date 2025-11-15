@@ -28,7 +28,7 @@ const DEFAULT_STYLE = "cursor-pointer transition rounded-md"
 const BUTTONS_SIZE = {
   sm: 'px-4 py-1',
   md: 'px-6 py-1.5',
-  lg: 'px-8 py-2'
+  lg: 'px-8 py-3'
 }
 
 /**
@@ -38,7 +38,7 @@ const BUTTONS_SIZE = {
  */
 const BUTTONS_VARIANTS: ButtonVariants = {
   default: 'bg-indigo-500 hover:enabled:bg-indigo-600 text-white',
-  secondary: 'bg-indigo-500/70 hover:enabled:bg-indigo-600/70 text-white',
+  secondary: 'bg-gray-800 hover:enabled:bg-gray-900 text-white',
   danger: '',
   outline: 'border border-gray-500/20 text-black hover:enabled:bg-gray-50',
 }
