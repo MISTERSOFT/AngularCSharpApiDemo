@@ -17,7 +17,7 @@ export class AppComponent {
 
   readonly user = computed(() => this._authService.user())
   readonly #HIDE_NAVBAR_WHEN: Array<(url: string) => boolean> = [
-    (url: string) => url === '/signin',
+    (url: string) => url.startsWith('/signin'),
     (url: string) => url === '/signup',
     (url: string) => url.startsWith('/admin'),
   ]

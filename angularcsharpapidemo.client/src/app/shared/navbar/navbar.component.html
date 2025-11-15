@@ -28,11 +28,12 @@
 
 
       @if (user()) {
-      <div class="relative cursor-pointer">
+      <a routerLink="/cart" class="relative cursor-pointer">
         <ng-icon name="lucideShoppingCart"></ng-icon>
-        <span
-          class="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full text-center">3</span>
-      </div>
+        <span class="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full text-center">
+          {{cartItemsCount()}}
+        </span>
+      </a>
       <span>Hello {{user()?.email}}</span>
       <button appButton variant="outline" (click)="logout()">
         Disconnect

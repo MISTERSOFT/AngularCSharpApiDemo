@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { lucideLock, lucideMail } from '@ng-icons/lucide';
 import { svglGoogle } from '@ng-icons/svgl';
@@ -16,6 +16,7 @@ export class SigninComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private _route = inject(ActivatedRoute)
 
   loginForm: FormGroup;
   isLoading = signal(false);
@@ -71,7 +72,8 @@ export class SigninComponent {
         this.isLoading.set(false);
         console.log('Login successful', response);
         // Navigate to home page or dashboard
-        this.router.navigate(['/']);
+        const redirectTo = this._route.snapshot.queryParamMap.get('redirectTo') || '/'
+        this.router.navigate([redirectTo]);
       },
       error: (error) => {
         this.isLoading.set(false);

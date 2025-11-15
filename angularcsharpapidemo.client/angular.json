@@ -6,7 +6,7 @@
     "angularcsharpapidemo.client": {
       "projectType": "application",
       "i18n": {
-        "sourceLocale": "fr-FR"
+        "sourceLocale": "fr"
       },
       "schematics": {
         "@schematics/angular:component": {

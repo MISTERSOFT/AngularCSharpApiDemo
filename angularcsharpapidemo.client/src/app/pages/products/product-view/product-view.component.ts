@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CartService } from '@app/services';
 import { ProductDto } from '@app/types';
 
 /**
@@ -13,14 +14,15 @@ import { ProductDto } from '@app/types';
   templateUrl: './product-view.component.html',
 })
 export class ProductViewComponent implements OnInit {
+  private readonly _cartService = inject(CartService)
   private readonly _router = inject(Router)
   private readonly _route = inject(ActivatedRoute);
-  private readonly _data = toSignal(this._route.data)
+  private readonly _routeData = toSignal(this._route.data)
 
   /**
    * Product data loaded from API
    */
-  product = computed<ProductDto>(() => this._data()!['product'])
+  product = computed<ProductDto>(() => this._routeData()!['product'])
 
   /**
    * Index of currently selected image in gallery
@@ -90,16 +92,10 @@ export class ProductViewComponent implements OnInit {
    * Add product to cart
    */
   addToCart(): void {
-    const prod = this.product();
-    if (!prod) return;
-
-    console.log('Add to cart:', {
-      product: prod,
+    this._cartService.add([{
+      productId: this.product().id,
       quantity: this.quantity()
-    });
-
-    // TODO: Implement cart service integration
-    alert(`Added ${this.quantity()} x ${prod.name} to cart!`);
+    }])
   }
 
   /**
