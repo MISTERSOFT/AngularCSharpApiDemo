@@ -1,0 +1,88 @@
+<main class="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
+  <div class="flex-1 max-w-4xl">
+    <h1 class="text-3xl font-medium mb-6">
+      Shopping Cart <span class="text-sm text-indigo-500">{{products().length}} Items</span>
+    </h1>
+
+    @if (products().length > 0) {
+    <div class="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
+      <p class="text-left">Product Details</p>
+      <p class="text-center">Subtotal</p>
+      <p class="text-center">Action</p>
+    </div>
+
+    @for (product of products(); track $index) {
+    <div class="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3">
+      <div class="flex items-center md:gap-6 gap-3">
+        <div
+          class="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded overflow-hidden">
+          <img class="max-w-full h-full object-cover" [src]="product.productImages[0].url" [alt]="product.name" />
+        </div>
+        <div>
+          <p class="hidden md:block font-semibold">{{product.name}}</p>
+          <div class="font-normal text-gray-500/70">
+            <div class="flex items-center">
+              <p>Qty: {{product.quantity}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center">{{product.price * product.quantity | currency:'EUR':'symbol':'1.2-2'}}</p>
+      <button class="cursor-pointer mx-auto text-red-500" (click)="removeItem(product)">
+        <ng-icon name="lucideXCircle" />
+      </button>
+    </div>
+    }
+
+    } @else {
+    <div class="flex items-center text-center w-full text-xl">
+      Cart empty
+    </div>
+    }
+
+    <a routerLink="/products" class="cursor-pointer flex items-center mt-8 gap-2 text-indigo-500 font-medium">
+      <ng-icon name="lucideArrowLeft" />
+      Continue Shopping
+    </a>
+
+  </div>
+
+  <div class="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
+    <h2 class="text-xl md:text-xl font-medium">Order Summary</h2>
+    <hr class="border-gray-300 my-5" />
+
+    <div class="mb-6">
+      <p class="text-sm font-medium uppercase">Delivery Address</p>
+      <div class="relative flex justify-between items-start mt-2">
+        <p class="text-gray-500">No address found</p>
+      </div>
+
+      <p class="text-sm font-medium uppercase mt-6">Payment Method</p>
+
+      <select class="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none">
+        <option value="air">Air</option>
+      </select>
+    </div>
+
+    <hr class="border-gray-300" />
+
+    <div class="text-gray-500 mt-4 space-y-2">
+      <p class="flex justify-between">
+        <span>Price</span><span>{{ calculatedPrice() | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </p>
+      <p class="flex justify-between">
+        <span>Shipping Fee</span><span class="text-green-600">Free</span>
+      </p>
+      <p class="flex justify-between">
+        <span>Tax (0%)</span><span class="text-green-600">Free</span>
+      </p>
+      <p class="flex justify-between text-lg font-medium mt-3">
+        <span>Total Amount:</span><span>{{ calculatedPrice() | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </p>
+    </div>
+
+    <button appButton size="lg" class="w-full mt-6 font-medium">
+      Place Order
+    </button>
+  </div>
+</main>
