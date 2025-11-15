@@ -1,5 +1,6 @@
 using AngularCSharpApiDemo.Server.Data;
 using AngularCSharpApiDemo.Server.DTOs;
+using AngularCSharpApiDemo.Server.DTOs.Converters;
 using AngularCSharpApiDemo.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -74,24 +75,6 @@ public class ProductsController : ControllerBase
             .Take(filterParams.PageSize)
             .ToListAsync();
 
-        var productDtos = products.Select(p => new ProductDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            Description = p.Description,
-            Price = p.Price,
-            Categories = p.Categories.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList(),
-            ProductImages = p.ProductImages.Select(pi => new ProductImageDto
-            {
-                Id = pi.Id,
-                Url = pi.Url
-            }).ToList()
-        }).ToList();
-
         var totalPages = (int)Math.Ceiling(totalCount / (double)filterParams.PageSize);
 
         var response = new PagedResponse<ProductDto>
@@ -102,7 +85,7 @@ public class ProductsController : ControllerBase
             TotalPages = totalPages,
             HasPrevious = filterParams.PageNumber > 1,
             HasNext = filterParams.PageNumber < totalPages,
-            Items = productDtos
+            Items = products.ToDtos()
         };
 
         return Ok(response);
@@ -124,25 +107,35 @@ public class ProductsController : ControllerBase
             return NotFound(new { message = $"Product with ID {id} not found" });
         }
 
-        var productDto = new ProductDto
-        {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Price = product.Price,
-            Categories = product.Categories.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList(),
-            ProductImages = product.ProductImages.Select(pi => new ProductImageDto
-            {
-                Id = pi.Id,
-                Url = pi.Url
-            }).ToList()
-        };
+        return Ok(product.ToDto());
+    }
 
-        return Ok(productDto);
+    /// <summary>
+    /// Get multiple products by their IDs
+    /// </summary>
+    /// <param name="productIds">List of product IDs to retrieve</param>
+    /// <returns>List of products matching the provided IDs</returns>
+    [HttpPost("by-ids")]
+    public async Task<ActionResult<List<ProductDto>>> GetProductsByIds([FromBody] List<int> productIds)
+    {
+        // Validate input
+        if (productIds == null || !productIds.Any())
+        {
+            return BadRequest(new { message = "Product IDs list cannot be empty" });
+        }
+
+        // Remove duplicates and get distinct IDs
+        var distinctIds = productIds.Distinct().ToList();
+
+        // Query products by IDs
+        var products = await _context.Products
+            .Include(p => p.Categories)
+            .Include(p => p.ProductImages)
+            .Where(p => distinctIds.Contains(p.Id))
+            .ToListAsync();
+
+        // Map to DTOs and return
+        return Ok(products.ToDtos());
     }
 
     /// <summary>
