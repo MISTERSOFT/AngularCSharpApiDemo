@@ -1,11 +1,6 @@
 @AngularCSharpApiDemo.Server_HostAddress = https://localhost:7041
 @token = YOUR_JWT_TOKEN_HERE
 
-### Weather Forecast (Sample)
-GET {{AngularCSharpApiDemo.Server_HostAddress}}/api/weatherforecast/
-Accept: application/json
-
-###
 
 #########################
 # AUTHENTICATION
