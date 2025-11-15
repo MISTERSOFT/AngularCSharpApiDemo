@@ -1,0 +1,156 @@
+<main class="min-h-screen">
+  <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Product Content -->
+    @if (product()) {
+    <!-- Breadcrumb Navigation -->
+    <nav class="mb-6">
+      <ol class="flex items-center gap-2 text-sm text-gray-600">
+        <li><a href="/" class="hover:text-gray-900">Home</a></li>
+        <li>/</li>
+        <li><a href="/products" class="hover:text-gray-900">Products</a></li>
+        <li>/</li>
+        <li class="text-gray-900 font-medium">{{ product().name }}</li>
+      </ol>
+    </nav>
+
+    <!-- Main Product Section -->
+    <div class="flex flex-col gap-6 md:flex-row md:gap-10">
+      <!-- Left Column: Image Gallery -->
+      <div class="flex-1">
+        <div class="flex gap-4">
+          <!-- Thumbnail Strip -->
+          <div class="flex flex-col gap-3 max-w-24">
+            @for (image of product().productImages; track image.id; let idx = $index) {
+            <button (click)="selectImage(idx)" [class.ring-2]="selectedImageIndex() === idx"
+              [class.ring-indigo-600]="selectedImageIndex() === idx"
+              class="border rounded-lg overflow-hidden hover:opacity-75 transition-opacity cursor-pointer">
+              <img [src]="image.url" [alt]="product.name + ' thumbnail ' + (idx + 1)" class="w-full h-24 object-cover">
+            </button>
+            }
+          </div>
+
+          <!-- Main Image Display -->
+          <div class="flex-1 border rounded-lg overflow-hidden">
+            <img [src]="selectedImage().url" [alt]="product().name" class="w-full h-auto object-cover max-h-[600px]">
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Product Information -->
+      <div class="flex-1 space-y-6">
+        <!-- Product Title -->
+        <div>
+          <h1 class="text-3xl font-medium text-gray-900">{{ product().name }}</h1>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-center">
+            @for (star of [1,2,3,4,5]; track star) {
+            <svg
+              [class.text-yellow-400]="star <= 4"
+              [class.text-gray-300]="star > 4"
+              class="w-5 h-5 fill-current"
+              viewBox="0 0 20 20">
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+            </svg>
+            }
+          </div>
+          <span class="text-sm text-gray-600">(128 reviews)</span>
+        </div>
+
+        <!-- Pricing -->
+        <div class="flex items-center gap-3">
+          <span class="text-3xl font-medium text-gray-900">{{ product().price | currency:'EUR':'symbol':'1.2-2'
+            }}</span>
+          <span class="text-lg text-gray-500 line-through">{{ originalPrice() | currency:'EUR':'symbol':'1.2-2'
+            }}</span>
+          <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+            {{ discountPercentage() }}% OFF
+          </span>
+        </div>
+
+        <!-- Tax Disclaimer -->
+        <p class="text-sm text-gray-600">Tax included. Shipping calculated at checkout.</p>
+
+        <!-- Product Description -->
+        <div class="space-y-3">
+          <h2 class="text-lg font-medium text-gray-900">Description</h2>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            {{ product().description }}
+          </p>
+        </div>
+
+        <!-- Categories -->
+        <div class="space-y-3">
+          <h2 class="text-lg font-medium text-gray-900">Categories</h2>
+          <div class="flex flex-wrap gap-2">
+            @for (category of product().categories; track category.id) {
+            <span class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full">
+              {{ category.name }}
+            </span>
+            }
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="space-y-3">
+          <h2 class="text-lg font-medium text-gray-900">Quantity</h2>
+          <div class="flex items-center gap-3">
+            <button (click)="decreaseQuantity()" [disabled]="quantity() <= 1"
+              class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+              </svg>
+            </button>
+            <span class="w-12 text-center font-medium">{{ quantity() }}</span>
+            <button (click)="increaseQuantity()"
+              class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col gap-3 pt-4">
+          <button appButton variant="secondary" size="lg" (click)="addToCart()" class="font-medium">
+            Add to Cart
+          </button>
+          <button appButton size="lg" (click)="buyNow()" class="font-medium">
+            Buy Now
+          </button>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="pt-4 space-y-3 border-t border-gray-200">
+          <div class="flex items-start gap-3 text-sm">
+            <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+            </svg>
+            <div>
+              <p class="font-medium text-gray-900">Free Shipping</p>
+              <p class="text-gray-600">On orders over 0 €</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-sm">
+            <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+              </path>
+            </svg>
+            <div>
+              <p class="font-medium text-gray-900">Easy Returns</p>
+              <p class="text-gray-600">30-day return policy</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</main>

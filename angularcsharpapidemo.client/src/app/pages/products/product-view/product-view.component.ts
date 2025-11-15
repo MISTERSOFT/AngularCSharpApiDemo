@@ -1,0 +1,120 @@
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductDto } from '@app/types';
+
+/**
+ * Product details view component
+ * Displays comprehensive product information with image gallery, pricing, and purchase options
+ */
+@Component({
+  selector: 'app-product-view',
+  standalone: false,
+  templateUrl: './product-view.component.html',
+})
+export class ProductViewComponent implements OnInit {
+  private readonly _router = inject(Router)
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _data = toSignal(this._route.data)
+
+  /**
+   * Product data loaded from API
+   */
+  product = computed<ProductDto>(() => this._data()!['product'])
+
+  /**
+   * Index of currently selected image in gallery
+   */
+  selectedImageIndex = signal(0);
+
+  /**
+   * Currently selected image from product gallery
+   */
+  selectedImage = computed(() => {
+    const prod = this.product();
+    const index = this.selectedImageIndex();
+    if (prod && prod.productImages.length > 0) {
+      return prod.productImages[index] || prod.productImages[0];
+    }
+    return { id: 0, url: 'https://placehold.co/600x400?text=No+Image' };
+  });
+
+  /**
+   * Quantity selected for purchase
+   */
+  quantity = signal(1);
+
+  /**
+   * Original price (simulated as 20% higher than current price)
+   */
+  originalPrice = computed(() => {
+    const prod = this.product();
+    return prod ? (prod.price * 1.2).toFixed(2) : '0.00';
+  });
+
+  /**
+   * Discount percentage calculation
+   */
+  discountPercentage = computed(() => {
+    return 20; // Fixed 20% discount for demo
+  });
+
+  ngOnInit() {
+    if (!this.product()) {
+      this._router.navigate(['/404'])
+    }
+  }
+
+  /**
+   * Select image from gallery
+   */
+  selectImage(index: number): void {
+    this.selectedImageIndex.set(index);
+  }
+
+  /**
+   * Increase quantity
+   */
+  increaseQuantity(): void {
+    this.quantity.update(q => q + 1);
+  }
+
+  /**
+   * Decrease quantity (minimum 1)
+   */
+  decreaseQuantity(): void {
+    this.quantity.update(q => Math.max(1, q - 1));
+  }
+
+  /**
+   * Add product to cart
+   */
+  addToCart(): void {
+    const prod = this.product();
+    if (!prod) return;
+
+    console.log('Add to cart:', {
+      product: prod,
+      quantity: this.quantity()
+    });
+
+    // TODO: Implement cart service integration
+    alert(`Added ${this.quantity()} x ${prod.name} to cart!`);
+  }
+
+  /**
+   * Proceed to checkout immediately
+   */
+  buyNow(): void {
+    const prod = this.product();
+    if (!prod) return;
+
+    console.log('Buy now:', {
+      product: prod,
+      quantity: this.quantity()
+    });
+
+    // TODO: Implement checkout flow
+    alert(`Proceeding to checkout with ${this.quantity()} x ${prod.name}`);
+  }
+}

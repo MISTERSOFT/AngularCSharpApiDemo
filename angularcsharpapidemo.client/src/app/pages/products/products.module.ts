@@ -10,6 +10,7 @@ import { SelectComponent } from "@app/shared/ui/select";
 import { ProductFiltersComponent } from './components/product-filters/product-filters.component';
 import { ProductItemComponent } from './components/product-item/product-item.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductViewComponent } from './product-view/product-view.component';
 import { ProductsRoutingModule } from './products-routing.module';
 import { ProductsComponent } from './products.component';
 
@@ -20,6 +21,7 @@ import { ProductsComponent } from './products.component';
     ProductItemComponent,
     ProductListComponent,
     ProductFiltersComponent,
+    ProductViewComponent,
   ],
   imports: [
     FormsModule,
@@ -31,6 +33,6 @@ import { ProductsComponent } from './products.component';
     RangeInputComponent,
     ButtonDirective,
     PaginationComponent,
-]
+  ]
 })
 export class ProductsModule { }
