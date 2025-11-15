@@ -27,3 +27,13 @@ export function extractResponseErrors(
   // Assume the format is { errors: { field: "message" } }
   return Object.values(response.error['errors'])
 }
+
+/**
+ * Remove duplicate from an array of object
+ * @param array Object array
+ * @param key Property used as unique key in each object
+ * @returns Array of duplicate free
+ */
+export function arrayUniqBy<T extends {}>(array: Array<T>, key: keyof T) {
+  return [...new Map(array.map(item => [item[key], item])).values()]
+}
