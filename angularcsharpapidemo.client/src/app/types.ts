@@ -74,3 +74,8 @@ export interface DashboardStatsDto {
   totalProducts: number
   totalCategories: number
 }
+
+/**
+ * Represent the visual product row in the cart
+ */
+export type CartProductItem = ProductDto & { quantity: number }

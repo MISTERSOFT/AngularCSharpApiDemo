@@ -49,6 +49,13 @@ export class ProductsService extends AbstractBaseApiService {
   }
 
   /**
+   * Get products by ids
+   */
+  getProductByIds(productIds: number[]): Observable<ProductDto[]> {
+    return this.http.post<ProductDto[]>(`${this.controllerUrl}/by-ids`, productIds);
+  }
+
+  /**
    * Create a new product (Admin only)
    */
   createProduct(product: CreateProductDto): Observable<ProductDto> {
