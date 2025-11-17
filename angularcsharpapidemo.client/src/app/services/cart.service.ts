@@ -38,23 +38,22 @@ export class CartService {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(data))
   }
 
-  add(itemsToAdd: CartItem[]) {
+  add(itemToAdd: CartItem) {
     // Retrieve the cart from the local storage
     const currentCart = this.retrieve()
 
     // Use a Map object to ensure unique product in the cart.
     const newCart = new Map<number, number>()
-    // Add current cart to the Map object
+    // Add local storage cart to the Map object
     currentCart.forEach(item => newCart.set(item.productId, item.quantity))
-    // Update the quantity of each product added
-    itemsToAdd.forEach(item => {
-      let quantity = item.quantity
-      if (newCart.has(item.productId)) {
-        const previousQty = newCart.get(item.productId)!
-        quantity += previousQty
-      }
-      newCart.set(item.productId, quantity)
-    })
+
+    // Update the quantity of the product added
+    let quantity = itemToAdd.quantity
+    if (newCart.has(itemToAdd.productId)) {
+      const previousQty = newCart.get(itemToAdd.productId)!
+      quantity += previousQty
+    }
+    newCart.set(itemToAdd.productId, quantity)
 
     // Convert the Map object into a readable/useable object
     const cartMapToObject: CartItem[] = Array.from(newCart).map(item => ({ productId: item[0], quantity: item[1] }))

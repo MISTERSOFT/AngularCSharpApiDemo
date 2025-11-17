@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CartService } from '@app/services';
+import { AuthService, CartService } from '@app/services';
 import { ProductDto } from '@app/types';
 
 /**
@@ -14,6 +14,7 @@ import { ProductDto } from '@app/types';
   templateUrl: './product-view.component.html',
 })
 export class ProductViewComponent implements OnInit {
+  private _authService = inject(AuthService)
   private readonly _cartService = inject(CartService)
   private readonly _router = inject(Router)
   private readonly _route = inject(ActivatedRoute);
@@ -92,25 +93,20 @@ export class ProductViewComponent implements OnInit {
    * Add product to cart
    */
   addToCart(): void {
-    this._cartService.add([{
+    // Redirect the user to the login page before adding any items in the cart
+    if (!this._authService.isAuthenticated()) {
+      this._router.navigate(['/signin'], {
+        queryParams: {
+          redirectTo: this._router.url
+        }
+      })
+
+      return
+    }
+
+    this._cartService.add({
       productId: this.product().id,
       quantity: this.quantity()
-    }])
-  }
-
-  /**
-   * Proceed to checkout immediately
-   */
-  buyNow(): void {
-    const prod = this.product();
-    if (!prod) return;
-
-    console.log('Buy now:', {
-      product: prod,
-      quantity: this.quantity()
-    });
-
-    // TODO: Implement checkout flow
-    alert(`Proceeding to checkout with ${this.quantity()} x ${prod.name}`);
+    })
   }
 }
