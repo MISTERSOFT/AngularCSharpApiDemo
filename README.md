@@ -1,19 +1,53 @@
-# AngularCSharpApiDemo
+# Angular & C# Asp.NET Core API Demo App
 
-A full-stack web application template combining **Angular 20** frontend with **ASP.NET Core 9** backend, featuring JWT authentication, PostgreSQL database, and Docker support.
+A full-stack **e-commerce application** combining **Angular 20** frontend with **ASP.NET Core 9** backend, featuring product management, shopping cart, admin dashboard, JWT authentication, PostgreSQL database, and Docker support.
 
-## 🚀 Features
+## 📝 Project Summary
 
-- ✅ **JWT Authentication** with ASP.NET Core Identity
-- ✅ **PostgreSQL** database with Entity Framework Core 9
-- ✅ **Docker Compose** for PostgreSQL and PGAdmin
-- ✅ **Role-based Authorization** (Admin, User)
-- ✅ **Automatic Database Seeding** with default admin user
-- ✅ **Health Checks** with Kubernetes-ready probes
-- ✅ **Clean Architecture** with organized folder structure
-- ✅ **OpenAPI/Swagger** documentation
-- ✅ **CORS** configured for Angular development
-- ✅ **Production-ready** Docker multi-stage builds
+This is a **production-ready e-commerce starter** with:
+
+- [x] **Complete Authentication System** - Registration, login, JWT tokens, role-based access
+- [x] **Full E-Commerce Features** - Products, categories, cart, admin dashboard
+- [x] **Modern Angular Architecture** - Signals, standalone components, guards, resolvers
+- [x] **Clean Backend Design** - Controllers, services, DTOs, converters, health checks
+- [x] **Database Management** - PostgreSQL, EF Core, migrations, seeding
+- [x] **Responsive UI** - Tailwind CSS, reusable components, theme support
+- [x] **Security Best Practices** - JWT authentication, CORS, input validation, authorization
+- [x] **Developer Experience** - Hot reload, Docker Compose, comprehensive documentation
+- [x] **Production Ready** - Health checks, Docker support, proper error handling
+
+**Perfect for:**
+- Learning full-stack development with Angular and .NET
+- Starting a new e-commerce project
+- Understanding modern web application architecture
+- Reference implementation for best practices
+
+## 📦 Tech Stack
+
+### Backend
+- **ASP.NET Core 9.0** - Web API framework
+- **Entity Framework Core 9.0** - ORM for database access
+- **PostgreSQL 17** - Relational database
+- **ASP.NET Core Identity** - Authentication & user management
+- **JWT Bearer Authentication** - Token-based security
+- **Npgsql** - PostgreSQL provider for .NET
+- **AspNetCore.HealthChecks** - Application health monitoring
+- **OpenAPI/Swagger** - API documentation
+
+### Frontend
+- **Angular 20.3.10** - SPA framework
+- **TypeScript 5.9.3** - Type-safe JavaScript
+- **RxJS** - Reactive programming
+- **Tailwind CSS 4.0** - Utility-first CSS framework
+- **ng-icons** - Icon library (Lucide icons)
+- **tailwind-merge** - Utility for merging Tailwind classes
+
+### DevOps & Tools
+- **Docker & Docker Compose** - Containerization
+- **PGAdmin 4** - PostgreSQL administration
+- **OpenAPI/Swagger** - API documentation
+- **Angular CLI** - Development tooling
+
 
 ## 📁 Project Architecture
 
@@ -22,12 +56,14 @@ A full-stack web application template combining **Angular 20** frontend with **A
 ```
 AngularCSharpApiDemo.Server/
 ├── Controllers/          # API endpoints
-│   ├── AuthController.cs         # Authentication (register, login, me)
-│   └── WeatherForecastController.cs
+│   ├── AuthController.cs              # Authentication (register, login, me)
+│   ├── ProductsController.cs          # Products CRUD & filtering
+│   ├── CategoriesController.cs        # Categories CRUD
+│   └── AdminDashboardController.cs    # Admin statistics
 │
 ├── Data/                # Database context and seeding
 │   ├── ApplicationDbContext.cs   # EF Core DbContext
-│   ├── DatabaseSeeder.cs         # Seeds roles & admin user
+│   ├── DatabaseSeeder.cs         # Seeds roles, admin user & sample data
 │   ├── README_SEEDING.md         # Seeding documentation
 │   └── SEEDING_APPROACHES.md     # Comparison of seeding methods
 │
@@ -36,13 +72,32 @@ AngularCSharpApiDemo.Server/
 │   └── README_HEALTHCHECKS.md    # Health checks documentation
 │
 ├── Models/              # Domain entities
-│   └── ApplicationUser.cs        # User entity (extends IdentityUser)
+│   ├── ApplicationUser.cs        # User entity (extends IdentityUser)
+│   ├── Product.cs                # Product entity
+│   ├── Category.cs               # Category entity
+│   └── ProductImage.cs           # Product image entity
 │
 ├── DTOs/                # Data Transfer Objects
-│   ├── RegisterDto.cs            # Registration request
-│   ├── LoginDto.cs               # Login request
-│   ├── AuthResponseDto.cs        # Auth response with JWT token
-│   └── UserDto.cs                # User information response
+│   ├── Auth/
+│   │   ├── RegisterDto.cs        # Registration request
+│   │   ├── LoginDto.cs           # Login request
+│   │   ├── AuthResponseDto.cs    # Auth response with JWT token
+│   │   └── UserDto.cs            # User information response
+│   ├── Product/
+│   │   ├── ProductDto.cs         # Product response
+│   │   ├── CreateProductDto.cs   # Create product request
+│   │   └── UpdateProductDto.cs   # Update product request
+│   ├── Category/
+│   │   ├── CategoryDto.cs        # Category response
+│   │   ├── CreateCategoryDto.cs  # Create category request
+│   │   └── UpdateCategoryDto.cs  # Update category request
+│   ├── Converters/               # DTO conversion extensions
+│   │   ├── ProductConverterExtensions.cs
+│   │   ├── CategoryConverterExtensions.cs
+│   │   └── ProductImageConverterExtensions.cs
+│   ├── DashboardStatsDto.cs      # Dashboard statistics
+│   ├── PagedResponse.cs          # Pagination response wrapper
+│   └── ProductFilterParams.cs    # Product filtering parameters
 │
 ├── Services/            # Business logic
 │   └── JwtService.cs             # JWT token generation & validation
@@ -73,16 +128,76 @@ AngularCSharpApiDemo.Server/
 ```
 angularcsharpapidemo.client/
 ├── src/
-│   ├── app/                 # Angular application
-│   │   ├── app.component.ts       # Root component
-│   │   ├── app.module.ts          # Root module
-│   │   └── app-routing.module.ts  # Routing configuration
-│   ├── main.ts              # Application entry point
-│   └── proxy.conf.js        # Proxy to backend API
-├── angular.json             # Angular CLI configuration
-├── package.json             # NPM dependencies
-└── tsconfig.json            # TypeScript configuration
+│   ├── app/
+│   │   ├── core/                    # Core functionality
+│   │   │   ├── constants.ts         # App constants (storage keys)
+│   │   │   ├── utils.ts             # Utility functions
+│   │   │   ├── guards/              # Route guards
+│   │   │   │   ├── admin-only.guard.ts    # Admin access guard
+│   │   │   │   ├── deny-if-auth.guard.ts  # Prevent auth users
+│   │   │   │   └── is-auth.guard.ts       # Require authentication
+│   │   │   └── http/                # HTTP utilities
+│   │   │       ├── abstract-base-api-service.ts
+│   │   │       └── interceptors/
+│   │   │           └── auth.interceptor.ts  # JWT token injection
+│   │   │
+│   │   ├── pages/                   # Application pages
+│   │   │   ├── landing/             # Landing page
+│   │   │   ├── signin/              # Sign in page
+│   │   │   ├── signup/              # Sign up page
+│   │   │   ├── products/            # Products listing & detail
+│   │   │   │   ├── product-view/    # Product detail view
+│   │   │   │   └── resolvers/       # Product resolver
+│   │   │   ├── cart/                # Shopping cart
+│   │   │   │   └── resolvers/       # Cart products resolver
+│   │   │   ├── admin/               # Admin section
+│   │   │   │   ├── admin.component  # Admin dashboard
+│   │   │   │   ├── products/        # Product management
+│   │   │   │   │   └── products-edit/  # Create/edit product
+│   │   │   │   └── categories/      # Category management
+│   │   │   │       └── categories-edit/  # Create/edit category
+│   │   │   └── errors/
+│   │   │       └── error404/        # 404 error page
+│   │   │
+│   │   ├── services/                # Business services
+│   │   │   ├── auth.service.ts      # Authentication service
+│   │   │   ├── products.service.ts  # Products API service
+│   │   │   ├── categories.service.ts  # Categories API service
+│   │   │   ├── cart.service.ts      # Shopping cart service
+│   │   │   ├── admin-dashboard.service.ts  # Admin stats service
+│   │   │   └── theme.service.ts     # UI theme service
+│   │   │
+│   │   ├── shared/                  # Shared components
+│   │   │   ├── navbar/              # Navigation bar
+│   │   │   ├── footer/              # Footer component
+│   │   │   ├── admin-side-menu/     # Admin sidebar
+│   │   │   └── ui/                  # Reusable UI components
+│   │   │       ├── button/          # Button directive
+│   │   │       ├── dropdown-menu/   # Dropdown component
+│   │   │       ├── input/           # Input component
+│   │   │       └── pagination/      # Pagination component
+│   │   │
+│   │   ├── types.ts                 # TypeScript type definitions
+│   │   ├── app.component.ts         # Root component
+│   │   ├── app.module.ts            # Root module
+│   │   └── app-routing.module.ts    # Routing configuration
+│   │
+│   ├── main.ts                      # Application entry point
+│   └── proxy.conf.js                # Proxy to backend API
+│
+├── angular.json                     # Angular CLI configuration
+├── package.json                     # NPM dependencies
+├── tsconfig.json                    # TypeScript configuration
+└── tailwind.config.js               # Tailwind CSS configuration
 ```
+
+**Frontend Architecture Highlights:**
+- **Pages**: Organized by feature (products, cart, admin, auth)
+- **Services**: API communication and state management
+- **Guards**: Route protection and access control
+- **Shared Components**: Reusable UI components
+- **Resolvers**: Data pre-loading before route activation
+- **Signals**: Reactive state management (Angular 20)
 
 ## 🏁 Quick Start
 
@@ -90,7 +205,7 @@ angularcsharpapidemo.client/
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - [Node.js 20+](https://nodejs.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Docker](https://www.docker.com/)
 
 ### 1. Clone and Setup
 
@@ -100,7 +215,7 @@ git clone <your-repo-url>
 cd AngularCSharpApiDemo
 
 # Start PostgreSQL and PGAdmin with Docker
-docker-compose up -d
+docker-compose -f docker-compose.development.yml up -d
 ```
 
 ### 2. Configure Database
@@ -113,7 +228,7 @@ The application uses PostgreSQL. Connection strings are in:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=angularcsharpapidemo;Username=admin;Password=admin"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=angularcsharpapidemo;Username=root;Password=root"
   }
 }
 ```
@@ -132,34 +247,29 @@ dotnet ef database update
 
 ### 4. Run the Application
 
-**Backend:**
 ```bash
 cd AngularCSharpApiDemo.Server
-dotnet run
-```
-
-**Frontend:**
-```bash
-cd angularcsharpapidemo.client
-npm install
-npm start
+dotnet run --launch-profile "https"
 ```
 
 The application will:
 - Automatically create **Admin** and **User** roles
-- Seed a default admin user (see below)
+- Seed a defa ult admin user (see below)
 - Apply pending migrations (if configured)
 
 ### 5. Access the Application
 
+> NOTE: Frontend will run on port `55428` but you can access the API by using the `/api` in the URL. Config in the `src/proxy.conf.js` file. If the app don't run on port `55428` check out the console.
+
 - **Frontend**: https://localhost:55428
-- **Backend API**: https://localhost:7000 (check console for actual port)
-- **Swagger/OpenAPI**: https://localhost:7000/openapi/v1.json (in development)
+- **Backend API**: https://localhost:7041 (check console for actual port)
+- **OpenAPI**: https://localhost:7041/openapi/v1.json (in development)
+- **Swagger**: https://localhost:7041/swagger/index.html (in development)
 - **PGAdmin**: http://localhost:5050 (Docker container PgAdmin needs to be running)
 - **Health Checks**:
-  - Complete status: https://localhost:7000/health
-  - Liveness probe: https://localhost:7000/health/live
-  - Readiness probe: https://localhost:7000/health/ready
+  - Complete status: https://localhost:7041/health
+  - Liveness probe: https://localhost:7041/health/live
+  - Readiness probe: https://localhost:7041/health/ready
 
 ## 🔐 Authentication
 
@@ -171,61 +281,58 @@ A default admin user is automatically created on first run:
 - **Username**: `admin`
 - **Password**: `Azerty123!`
 
-**⚠️ Security Warning**: Change these credentials before deploying to production!
 
-### Authentication Endpoints
+## 🛍️ E-Commerce Features
 
-| Endpoint | Method | Description | Auth Required |
-|----------|--------|-------------|---------------|
-| `/api/auth/register` | POST | Register new user | No |
-| `/api/auth/login` | POST | Login and get JWT token | No |
-| `/api/auth/me` | GET | Get current user info | Yes |
+### Product Management
 
-### Example: Register a User
+The application includes a complete product management system with:
+- **Product Catalog**: Browse products with pagination and filtering
+- **Product Details**: View detailed product information with image gallery
+- **Admin CRUD**: Create, update, and delete products (admin only)
+- **Categories**: Organize products by categories
+- **Product Images**: Multiple images per product
+- **Pricing**: Support for price display with discounts
 
-```bash
-curl -X POST https://localhost:7000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "username": "johndoe",
-    "password": "Password123",
-    "firstName": "John",
-    "lastName": "Doe"
-  }'
+### Shopping Cart
+
+- **Add to Cart**: Add products from product detail page
+- **Cart Management**: Update quantities, remove items
+- **Persistence**: Cart stored in localStorage
+- **Cart Count**: Real-time cart item count in navbar
+- **Protected Route**: Cart accessible only to authenticated users
+
+### Admin Dashboard
+
+Admins have access to a dedicated dashboard with:
+- **Statistics**: View total products and categories count
+- **Product Management**: Full CRUD operations for products
+- **Category Management**: Full CRUD operations for categories
+- **Theme Support**: Special admin theme for better UX
+
+### Frontend Routes
+
+```
++------------------------------+-----------------------+---------------------+--------------+
+|            Route             |       Component       |     Description     |    Guard     |
++------------------------------+-----------------------+---------------------+--------------+
+|  `/`                         |  Landing              |  Landing page       |  None        |
+|  `/signin`                   |  SignIn               |  User login         |  DenyIfAuth  |
+|  `/signup`                   |  SignUp               |  User registration  |  DenyIfAuth  |
+|  `/products`                 |  Products             |  Product listing    |  None        |
+|  `/products/:id`             |  ProductView          |  Product details    |  None        |
+|  `/cart`                     |  Cart                 |  Shopping cart      |  IsAuth      |
+|  `/admin`                    |  Admin                |  Admin dashboard    |  AdminOnly   |
+|  `/admin/products`           |  AdminProducts        |  Manage products    |  AdminOnly   |
+|  `/admin/products/create`    |  AdminProductsEdit    |  Create product     |  AdminOnly   |
+|  `/admin/products/:id`       |  AdminProductsEdit    |  Edit product       |  AdminOnly   |
+|  `/admin/categories`         |  AdminCategories      |  Manage categories  |  AdminOnly   |
+|  `/admin/categories/create`  |  AdminCategoriesEdit  |  Create category    |  AdminOnly   |
+|  `/admin/categories/:id`     |  AdminCategoriesEdit  |  Edit category      |  AdminOnly   |
+|  `/404`                      |  Error404             |  Not found page     |  None        |
++------------------------------+-----------------------+---------------------+--------------+
 ```
 
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "username": "johndoe",
-  "email": "user@example.com",
-  "firstName": "John",
-  "lastName": "Doe",
-  "expiresAt": "2025-11-09T18:30:00Z"
-}
-```
-
-### Example: Login
-
-```bash
-curl -X POST https://localhost:7000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "usernameOrEmail": "admin",
-    "password": "Azerty123!"
-  }'
-```
-
-### Using JWT Token
-
-Include the token in the `Authorization` header:
-
-```bash
-curl -X GET https://localhost:7000/api/auth/me \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
-```
 
 ## 🗄️ Database
 
@@ -236,15 +343,15 @@ Docker Compose provides:
 - **PGAdmin** on port `5050`
 
 **PGAdmin Login:**
-- Email: `admin@admin.com`
-- Password: `admin`
+- Email: `root@root.com`
+- Password: `root`
 
 **PostgreSQL Connection in PGAdmin:**
 - Host: `postgres` (from container) or `localhost` (from host)
 - Port: `5432`
 - Database: `angularcsharpapidemo`
-- Username: `postgres`
-- Password: `postgres`
+- Username: `root`
+- Password: `root`
 
 ### Working with Migrations
 
@@ -276,6 +383,8 @@ The application uses a **dedicated seeding system** that runs automatically at s
 
 1. **Roles**: `Admin` and `User`
 2. **Admin User**: Default admin account (see credentials above)
+3. **Categories**: Sample product categories (Electronics, Clothing, Books, etc.)
+4. **Products**: Sample products with images and pricing
 
 ### Seeding Approach
 
@@ -303,25 +412,20 @@ See `AngularCSharpApiDemo.Server/Data/README_SEEDING.md` for detailed instructio
 **Quick example:**
 
 ```csharp
-// Data/ProductSeeder.cs
-public class ProductSeeder
+// Data/DatabaseSeeder.cs
+public class DatabaseSeeder
 {
     public async Task SeedAsync()
     {
-        if (!await _context.Products.AnyAsync())
-        {
-            await _context.Products.AddRangeAsync(
-                new Product { Name = "Laptop", Price = 999.99m },
-                new Product { Name = "Mouse", Price = 29.99m }
-            );
-            await _context.SaveChangesAsync();
-        }
+        // ...
+        await SeedTagsAsync()
+    }
+
+    public async Tag SeedTagsAsync()
+    {
+        // Add tags in database
     }
 }
-
-// Program.cs
-await app.SeedDatabaseAsync();    // Default seeding
-await app.SeedProductsAsync();    // Custom seeding
 ```
 
 ## 🏥 Health Checks
@@ -393,19 +497,6 @@ The application includes a comprehensive health checks system for monitoring app
     }
   }
 }
-```
-
-### Testing Health Checks
-
-```bash
-# Check overall health
-curl https://localhost:7000/health | jq
-
-# Check liveness (is the app alive?)
-curl https://localhost:7000/health/live | jq
-
-# Check readiness (is the app ready to serve traffic?)
-curl https://localhost:7000/health/ready | jq
 ```
 
 ### Docker/Kubernetes Integration
@@ -523,6 +614,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
+        // Update the port "55428" is necessary
         policy.WithOrigins("https://localhost:55428", "http://localhost:4200")
               .AllowAnyMethod()
               .AllowAnyHeader()
@@ -537,8 +629,6 @@ builder.Services.AddCors(options =>
 
 ```bash
 docker-compose -f docker-compose.development.yml up -d      # Start PostgreSQL & PGAdmin
-docker-compose down       # Stop services
-docker-compose logs -f    # View logs
 ```
 
 ### Production Build
@@ -581,30 +671,6 @@ Detailed documentation is available in:
   - Security best practices
   - Troubleshooting seeding issues
 
-## 🧪 Testing
-
-### Frontend Tests
-
-```bash
-cd angularcsharpapidemo.client
-
-# Run tests (watch mode)
-npm test
-
-# Single run (for CI)
-ng test --watch=false --browsers=ChromeHeadless
-
-# With coverage
-ng test --code-coverage
-```
-
-### Backend Tests
-
-Add your tests in a separate test project:
-
-```bash
-dotnet new xunit -n AngularCSharpApiDemo.Tests
-```
 
 ## 📋 Useful Commands
 
@@ -676,18 +742,10 @@ cat AngularCSharpApiDemo.Server/appsettings.Development.json
 
 ### Migration Fails
 
-```bash
-# Ensure database is running
-docker-compose ps
+1. Ensure database is running
+2. Check connection string
+3. Try building first: `dotnet build` then `dotnet ef database update`
 
-# Check connection string
-# Verify you're in correct directory
-cd AngularCSharpApiDemo.Server
-
-# Try building first
-dotnet build
-dotnet ef database update
-```
 
 ### JWT Token Invalid
 
@@ -706,35 +764,23 @@ dotnet ef database update
 
 After setup, consider implementing:
 
-1. **Refresh Tokens** - For better security and UX
-2. **Email Verification** - Verify user email addresses
-3. **Password Reset** - Forgot password functionality
-4. **Two-Factor Authentication (2FA)** - Additional security layer
-5. **User Profile Management** - Update user information
-6. **Audit Logging** - Track user actions
-7. **API Versioning** - Version your API endpoints
-8. **Rate Limiting** - Prevent abuse
-9. **Background Jobs** - Using Hangfire or similar
-10. **Caching** - Redis or in-memory caching
+1. **Order Management** - Complete checkout and order processing
+2. **Payment Integration** - Stripe, PayPal, etc.
+3. **Refresh Tokens** - For better security and UX
+4. **Email Verification** - Verify user email addresses
+5. **Password Reset** - Forgot password functionality
+6. **Two-Factor Authentication (2FA)** - Additional security layer
+7. **User Profile Management** - Update user information
+8. **Product Reviews & Ratings** - Customer feedback system
+9. **Wishlist** - Save products for later
+10. **Search Optimization** - Full-text search with ElasticSearch
+11. **Audit Logging** - Track user actions
+12. **API Versioning** - Version your API endpoints
+13. **Rate Limiting** - Prevent abuse
+14. **Background Jobs** - Using Hangfire for order processing
+15. **Caching** - Redis for product catalog
 
-## 📦 Tech Stack
 
-### Backend
-- ASP.NET Core 9.0
-- Entity Framework Core 9.0
-- PostgreSQL 17
-- ASP.NET Core Identity
-- JWT Bearer Authentication
-- Npgsql (PostgreSQL provider)
-- AspNetCore.HealthChecks (NpgSql, UI.Client)
+## Resources
 
-### Frontend
-- Angular 20.3.10
-- TypeScript 5.9.3
-- RxJS
-- Angular Build (Vite-based)
-
-### DevOps
-- Docker & Docker Compose
-- PGAdmin 4
-- OpenAPI/Swagger
+- **UI blocks inspiration**: https://prebuiltui.com/components
