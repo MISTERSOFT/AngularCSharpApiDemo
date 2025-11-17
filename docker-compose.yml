@@ -1,19 +1,30 @@
-name: AngularCSharpApiDemo
+name: AngularCSharpApiDemoProd
 
 services:
-  angularcsharpapidemo.server:
-    image: ${DOCKER_REGISTRY-}angularcsharpapidemoserver
+  app:
+    image: angularcsharpapidemoserver
+    container_name: app
     build:
       context: .
       dockerfile: AngularCSharpApiDemo.Server/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
     networks:
       - app-network
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   postgres:
     image: postgres:15
-    container_name: angularcsharpapidemo-postgres
+    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: root
@@ -22,13 +33,18 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_prod_data:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: angularcsharpapidemo-pgadmin
+    container_name: pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: root@root.com
@@ -37,16 +53,16 @@ services:
     ports:
       - "5050:80"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - pgadmin_prod_data:/var/lib/pgadmin
     networks:
       - app-network
     depends_on:
       - postgres
 
 volumes:
-  postgres_data:
+  postgres_prod_data:
     driver: local
-  pgadmin_data:
+  pgadmin_prod_data:
     driver: local
 
 networks:
