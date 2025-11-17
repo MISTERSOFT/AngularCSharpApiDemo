@@ -2,6 +2,22 @@
 
 A full-stack **e-commerce application** combining **Angular 20** frontend with **ASP.NET Core 9** backend, featuring product management, shopping cart, admin dashboard, JWT authentication, PostgreSQL database, and Docker support.
 
+## 🚀 Try It Now
+
+Try it now or go to [Setup development environment](#🏁-setup-development-environment)
+
+### Prerequisites
+- [Docker](https://www.docker.com/)
+
+Run the production ready docker compose file with:
+```bash
+docker compose -f docker-compose.yml up -d
+```
+
+Then go to: [http://localhost:8080/](http://localhost:8080/)
+
+All available routes [here](#frontend-routes).
+
 ## 📝 Project Summary
 
 This is a **production-ready e-commerce starter** with:
@@ -199,7 +215,8 @@ angularcsharpapidemo.client/
 - **Resolvers**: Data pre-loading before route activation
 - **Signals**: Reactive state management (Angular 20)
 
-## 🏁 Quick Start
+
+## 🏁 Setup development environment
 
 ### Prerequisites
 
@@ -636,8 +653,7 @@ docker-compose -f docker-compose.development.yml up -d      # Start PostgreSQL &
 Multi-stage Dockerfile included for production deployment:
 
 ```bash
-docker build -f AngularCSharpApiDemo.Server/Dockerfile -t angularcsharpapidemo .
-docker run -p 8080:8080 angularcsharpapidemo
+docker compose -f docker-compose.yml up -d
 ```
 
 ## 📚 Documentation
