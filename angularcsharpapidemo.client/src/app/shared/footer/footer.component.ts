@@ -1,7 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, CartService, UserDto } from '@app/services';
-import { ButtonDirective } from '@app/shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideInstagram, lucideTwitter } from '@ng-icons/lucide';
 
@@ -11,7 +10,6 @@ import { lucideInstagram, lucideTwitter } from '@ng-icons/lucide';
   imports: [
     RouterLink,
     NgIcon,
-    ButtonDirective
   ],
   templateUrl: './footer.component.html',
   viewProviders: [provideIcons({ lucideInstagram, lucideTwitter })]
